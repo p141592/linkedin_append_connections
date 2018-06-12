@@ -8,6 +8,7 @@ window.debug = false;
 
 let CONTACTS = $('.mn-pymk-list__card');
 let EXCLUDE_LIST = [];
+let NEW_FRENDS = [];
 let LOOP_INTERVAL = 3000;
 
 function write_log(field) {
@@ -64,7 +65,7 @@ function move() {
                 write_log(_int);
                 if (!check_exclude(_id)){
                     EXCLUDE_LIST.push(_id);
-
+                    NEW_FRENDS.push(_name);
                     console.log(_name);
                     console.log(_int);
                     _button.click()
@@ -79,6 +80,7 @@ function move() {
             }
         }
         scrole();
+        console.log(NEW_FRENDS.length);
         CONTACTS = $('.mn-pymk-list__card');
     }
 
