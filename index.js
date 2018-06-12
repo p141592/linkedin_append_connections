@@ -62,7 +62,7 @@ function move() {
             if (_int && _int < 30){
                 write_log('===============GOOD_FREND_INT===============');
                 write_log(_int);
-                if (check_exclude(_id)){
+                if (!check_exclude(_id)){
                     EXCLUDE_LIST.push(_id);
 
                     console.log(_name);
@@ -74,6 +74,7 @@ function move() {
                 }
 
             } else {
+                EXCLUDE_LIST.push(_id);
                 write_log('===============BAD_FREND_INT=================')
             }
         }
