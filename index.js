@@ -8,6 +8,7 @@ window.debug = false;
 
 let CONTACTS = $('.mn-pymk-list__card');
 let EXCLUDE_LIST = [];
+let EXCLUDE_LEN = 0;
 let NEW_FRENDS = [];
 let LOOP_INTERVAL = 3000;
 
@@ -29,8 +30,17 @@ function check_exclude(_id) {
     return false
 }
 
+function reload() {
+    window.go=false;
+    $('[href="/feed/"]')[0].click();
+    $('[href="/mynetwork/"]')[0].click();
+    window.go=true;
+
+}
 function move() {
     if (window.go){
+        EXCLUDE_LEN = EXCLUDE_LIST.length;
+        CONTACTS = $('.mn-pymk-list__card');
         for(var contact=0; contact<CONTACTS.length; contact++){
             write_log('FIELD');
             let field = CONTACTS[contact].children[0];
@@ -76,16 +86,21 @@ function move() {
 
             } else {
                 EXCLUDE_LIST.push(_id);
+
                 write_log('===============BAD_FREND_INT=================')
             }
         }
-        scrole();
-        console.log(NEW_FRENDS.length);
-        CONTACTS = $('.mn-pymk-list__card');
+        if (EXCLUDE_LIST.length == EXCLUDE_LEN){
+            write_log('===============RELOAD=================');
+            reload();
+        } else {
+            scrole();
+        }
     }
-
 }
-$(
-    window.setInterval(move, LOOP_INTERVAL)
-);
+
+window.setInterval(move, LOOP_INTERVAL);
+window.setInterval(function () {
+    console.log('NEW CONTACTS: ' + NEW_FRENDS.length);
+}, LOOP_INTERVAL*10);
 
