@@ -10,6 +10,7 @@ let CONTACTS = $('.mn-pymk-list__card');
 let EXCLUDE_LIST = [];
 let EXCLUDE_LEN = 0;
 let NEW_FRENDS = [];
+let EXCEPT_POSITIONS = ['recruitment', 'recruiter', 'hr'];
 let LOOP_INTERVAL = 3000;
 
 function write_log(field) {
@@ -23,20 +24,34 @@ function scrole() {
 }
 
 function check_exclude(_id) {
-    let res = EXCLUDE_LIST.indexOf(_id);
+    return list_content(_id, EXCLUDE_LIST);
+}
+
+function list_content(object, list) {
+    let res = list.indexOf(object);
     if (res >= 0){
         return true
     }
     return false
 }
+function check_position(position) {
+    var result = false;
+    position.forEach(function(element) {
+      if (list_content(element, EXCEPT_POSITIONS)){
+          result = true;
+      }
+    });
+    return result;
+}
 
-function reload() {
+function update_list() {
     window.go=false;
     $('[href="/feed/"]')[0].click();
     $('[href="/mynetwork/"]')[0].click();
     window.go=true;
 
 }
+
 function move() {
     if (window.go){
         EXCLUDE_LEN = EXCLUDE_LIST.length;
@@ -46,19 +61,23 @@ function move() {
             let field = CONTACTS[contact].children[0];
             write_log(field);
 
-            write_log('_ID');
+            write_log('ID');
             let _id = CONTACTS[contact].children[0].getAttribute('id');
             write_log(_id);
 
-            write_log('_NAME');
+            write_log('NAME');
             let _name = $(field.children[2].children[0].children[1]).text();
             write_log(_name);
 
-            write_log('_BUTTON');
+            write_log('BUTTON');
             let _button = field.children[3].children[0];
             write_log(_button);
 
-            write_log('_INT_FIELD');
+            write_log('POSITION');
+            let _position = $(field.children[2].children[0].children[3]).text().toLowerCase().split(' ');
+            write_log(_position);
+
+            write_log('INT_FIELD');
             let _int = 0;
             let _int_field;
             try {
@@ -68,9 +87,7 @@ function move() {
             } catch(err){}
             write_log(_int_field);
 
-
-
-            if (_int && _int < 30){
+            if (check_position(_position) || _int && _int < 30){
                 write_log('===============GOOD_FREND_INT===============');
                 write_log(_int);
                 if (!check_exclude(_id)){
@@ -92,7 +109,7 @@ function move() {
         }
         if (EXCLUDE_LIST.length == EXCLUDE_LEN){
             write_log('===============RELOAD=================');
-            reload();
+            update_list();
         } else {
             scrole();
         }
