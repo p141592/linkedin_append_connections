@@ -10,7 +10,9 @@ let CONTACTS = $('.mn-pymk-list__card');
 let EXCLUDE_LIST = [];
 let EXCLUDE_LEN = 0;
 let NEW_FRENDS = [];
-let EXCEPT_POSITIONS = ['recruitment', 'recruiter', 'hr'];
+let EXCEPT_POSITIONS = [
+    'recruitment', 'recruiter', 'hr', 'recruiting', 'head', 'lead', 'cio', 'cto', 'founder'
+];
 let LOOP_INTERVAL = 3000;
 
 function write_log(field) {
