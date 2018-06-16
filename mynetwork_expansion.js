@@ -22,7 +22,12 @@ function write_log(field) {
 }
 
 function scrole() {
-    $(window).scrollTop($(document).height())
+    $(window).scrollTop(-$(document).height());
+    $(window).scrollTop($(document).height());
+}
+
+function remove_static() {
+    $('.lazy-image').remove();
 }
 
 function check_exclude(_id) {
@@ -114,6 +119,7 @@ function move() {
             update_list();
         } else {
             scrole();
+            remove_static();
         }
     }
 }
