@@ -9,14 +9,15 @@ window.debug = false;
 let START_DATE = Date();
 let CONTACTS = $('.mn-pymk-list__card');
 let EXCLUDE_LIST = new Set();
-let MAX_EXCLUDE_LIST_SIZE = 30;
+let MAX_EXCLUDE_LIST_SIZE = 20;
 let EXCLUDE_LEN = 0;
 let NEW_FRENDS = [];
 let EXCEPT_POSITIONS = [
     'recruitment', 'recruiter', 'hr', 'recruiting', 'head', 'lead', 'cio', 'cto', 'founder'
 ];
-let LOOP_INTERVAL = 3000;
+let LOOP_INTERVAL = 4000;
 let LOOP_LEN = 0;
+let CHECK_USER;
 
 function check_exclude(_id) {
     return EXCLUDE_LIST.has(_id);
@@ -42,6 +43,15 @@ function check_position(position) {
 function remove_contact(_id) {
     $('#'+_id).parent().remove();
     EXCLUDE_LIST.delete(_id);
+}
+
+function check_blocking() {
+    let result = false;
+    if(CHECK_USER && $('#'+CHECK_USER).length > 0) {
+        result = true;
+    }
+    CHECK_USER = false;
+    return result
 }
 function move() {
     if (window.go){
@@ -82,6 +92,7 @@ function move() {
                 write_log(_int);
                 if (!check_exclude(_id)){
                     NEW_FRENDS.push(_name);
+                    CHECK_USER = _id;
                     console.log(_name);
                     console.log(_int);
                     _button.click();
@@ -95,12 +106,22 @@ function move() {
             EXCLUDE_LIST.add(_id);
             EXCLUDE_LEN += 1;
         }
-
-        scrole();
-        list_erase();
-
-        LOOP_LEN += 1;
+        finish_loop();
     }
+}
+
+function finish_loop() {
+    setTimeout(function(){
+          if (!check_blocking()){
+                scrole();
+                list_erase();
+            } else {
+                stop()
+            }
+
+            LOOP_LEN += 1;
+        }, 2000
+    );
 }
 
 window.setInterval(move, LOOP_INTERVAL);
