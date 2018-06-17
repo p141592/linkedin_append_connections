@@ -6,7 +6,7 @@
 window.go = true;
 window.debug = false;
 
-let START_DATE = Date.now();
+let START_DATE = Date();
 let CONTACTS = $('.mn-pymk-list__card');
 let EXCLUDE_LIST = new Set();
 let MAX_EXCLUDE_LIST_SIZE = 30;
@@ -135,12 +135,10 @@ function scrole() {
 
 
 function get_statistic() {
-    let stop_date = Date.now();
+    let stop_date = Date();
     console.log('LOOP_LEN: ' + LOOP_LEN);
     console.log('NEW CONTACTS: ' + NEW_FRENDS.length);
     console.log('EXCLUDE_LIST: ' + EXCLUDE_LEN);
     console.log('START DATE: ' + START_DATE);
     console.log('STOP DATE: ' + stop_date);
-    let duration = stop_date - START_DATE;
-    console.log('DURATION: ' + duration);
 }
