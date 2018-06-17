@@ -6,32 +6,20 @@
 window.go = true;
 window.debug = false;
 
+let START_DATE = Date.now();
 let CONTACTS = $('.mn-pymk-list__card');
-let EXCLUDE_LIST = [];
+let EXCLUDE_LIST = new Set();
+let MAX_EXCLUDE_LIST_SIZE = 30;
 let EXCLUDE_LEN = 0;
 let NEW_FRENDS = [];
 let EXCEPT_POSITIONS = [
     'recruitment', 'recruiter', 'hr', 'recruiting', 'head', 'lead', 'cio', 'cto', 'founder'
 ];
 let LOOP_INTERVAL = 3000;
-
-function write_log(field) {
-    if (window.debug){
-        console.log(field)
-    }
-}
-
-function scrole() {
-    $(window).scrollTop(-$(document).height());
-    $(window).scrollTop($(document).height());
-}
-
-function remove_static() {
-    $('.lazy-image').remove();
-}
+let LOOP_LEN = 0;
 
 function check_exclude(_id) {
-    return list_content(_id, EXCLUDE_LIST);
+    return EXCLUDE_LIST.has(_id);
 }
 
 function list_content(object, list) {
@@ -51,17 +39,12 @@ function check_position(position) {
     return result;
 }
 
-function update_list() {
-    window.go=false;
-    $('[href="/feed/"]')[0].click();
-    $('[href="/mynetwork/"]')[0].click();
-    window.go=true;
-
+function remove_contact(_id) {
+    $('#'+_id).parent().remove();
+    EXCLUDE_LIST.delete(_id);
 }
-
 function move() {
     if (window.go){
-        EXCLUDE_LEN = EXCLUDE_LIST.length;
         CONTACTS = $('.mn-pymk-list__card');
         for(var contact=0; contact<CONTACTS.length; contact++){
             write_log('FIELD');
@@ -98,29 +81,25 @@ function move() {
                 write_log('===============GOOD_FREND_INT===============');
                 write_log(_int);
                 if (!check_exclude(_id)){
-                    EXCLUDE_LIST.push(_id);
                     NEW_FRENDS.push(_name);
                     console.log(_name);
                     console.log(_int);
-                    _button.click()
+                    _button.click();
+
                 } else {
                     write_log('EXCLUDED');
                     write_log(_id)
                 }
 
-            } else {
-                EXCLUDE_LIST.push(_id);
-
-                write_log('===============BAD_FREND_INT=================')
             }
+            EXCLUDE_LIST.add(_id);
+            EXCLUDE_LEN += 1;
         }
-        if (EXCLUDE_LIST.length == EXCLUDE_LEN){
-            write_log('===============RELOAD=================');
-            update_list();
-        } else {
-            scrole();
-            remove_static();
-        }
+
+        scrole();
+        list_erase();
+
+        LOOP_LEN += 1;
     }
 }
 
@@ -129,3 +108,39 @@ window.setInterval(function () {
     console.log('NEW CONTACTS: ' + NEW_FRENDS.length);
 }, LOOP_INTERVAL*10);
 
+function stop() {
+    window.go=false;
+    get_statistic()
+
+}
+
+function list_erase() {
+    var iterator = EXCLUDE_LIST.values();
+    while (EXCLUDE_LIST.size > MAX_EXCLUDE_LIST_SIZE){
+        remove_contact(iterator.next().value);
+    }
+}
+
+
+function write_log(field) {
+    if (window.debug){
+        console.log(field)
+    }
+}
+
+function scrole() {
+    $(window).scrollTop(-$(document).height());
+    $(window).scrollTop($(document).height());
+}
+
+
+function get_statistic() {
+    let stop_date = Date.now();
+    console.log('LOOP_LEN: ' + LOOP_LEN);
+    console.log('NEW CONTACTS: ' + NEW_FRENDS.length);
+    console.log('EXCLUDE_LIST: ' + EXCLUDE_LEN);
+    console.log('START DATE: ' + START_DATE);
+    console.log('STOP DATE: ' + stop_date);
+    let duration = stop_date - START_DATE;
+    console.log('DURATION: ' + duration);
+}
