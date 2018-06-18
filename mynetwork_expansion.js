@@ -5,7 +5,7 @@ window.debug = false;
 let START_DATE = Date();
 let CONTACTS = $('.mn-pymk-list__card');
 let EXCLUDE_LIST = new Set();
-let MAX_EXCLUDE_LIST_SIZE = 40;
+let MAX_EXCLUDE_LIST_SIZE = 120;
 let EXCLUDE_LEN = 0;
 let NEW_FRENDS = [];
 let EXCEPT_POSITIONS = [
@@ -110,13 +110,13 @@ function finish_loop() {
     setTimeout(function(){
           if (!check_blocking()){
                 scrole();
-                list_erase();
+                setTimeout(function(){list_erase()}, 1000);
             } else {
                 stop()
             }
 
             LOOP_LEN += 1;
-        }, 2000
+        }, 3000
     );
 }
 
@@ -149,7 +149,7 @@ function write_log(field) {
 
 function scrole() {
     $(window).scrollTop(-$(document).height());
-    $(window).scrollTop($(document).height());
+    setTimeout(function(){$(window).scrollTop($(document).height());}, 500);
 }
 
 
