@@ -4,8 +4,11 @@ window.debug = false;
 
 let START_DATE = Date();
 let CONTACTS = $('.mn-pymk-list__card');
+let IN_LOOP = true;
 let EXCLUDE_LIST = new Set();
 let LAST_EXCLUDE_LEN = 0;
+let STUCK_COUNTER = 0;
+let max_STUCK_COUNTER = 3;
 let MAX_EXCLUDE_LIST_SIZE = 120;
 let NEW_FRENDS = [];
 let EXCEPT_POSITIONS = [
@@ -53,37 +56,29 @@ function check_blocking() {
 function check_stuck() {
     let result = false;
     if(LAST_EXCLUDE_LEN === EXCLUDE_LIST.size) {
-        result = true;
+        if (STUCK_COUNTER === max_STUCK_COUNTER){
+            result = true;
+        } else {
+            STUCK_COUNTER += 1
+        }
+
+    } else {
+        STUCK_COUNTER = 0;
     }
     return result
 }
 
 function move() {
-    if (window.go){
+    if (window.go && IN_LOOP){
         LAST_EXCLUDE_LEN = EXCLUDE_LIST.size;
         CONTACTS = $('.mn-pymk-list__card');
         for(var contact=0; contact<CONTACTS.length; contact++){
-            write_log('FIELD');
             let field = CONTACTS[contact].children[0];
-            write_log(field);
-
-            write_log('ID');
             let _id = CONTACTS[contact].children[0].getAttribute('id');
-            write_log(_id);
-
-            write_log('NAME');
             let _name = $(field.children[2].children[0].children[1]).text();
-            write_log(_name);
-
-            write_log('BUTTON');
             let _button = field.children[3].children[0];
-            write_log(_button);
-
-            write_log('POSITION');
             let _position = $(field.children[2].children[0].children[3]).text().toLowerCase().split(' ');
-            write_log(_position);
 
-            write_log('INT_FIELD');
             let _int = 0;
             let _int_field;
             try {
@@ -91,11 +86,8 @@ function move() {
                 let reg = /\d+/g;
                 _int = parseInt(_int_field.match(reg)[0]);
             } catch(err){}
-            write_log(_int_field);
 
             if (check_position(_position) || _int && _int < 30){
-                write_log('===============GOOD_FREND_INT===============');
-                write_log(_int);
                 if (!check_exclude(_id)){
                     NEW_FRENDS.push(_name);
                     CHECK_USER = _id;
@@ -103,14 +95,12 @@ function move() {
                     console.log(_int);
                     _button.click();
 
-                } else {
-                    write_log('EXCLUDED');
-                    write_log(_id)
                 }
 
             }
             EXCLUDE_LIST.add(_id);
         }
+        IN_LOOP = false;
         finish_loop();
     }
 }
@@ -125,14 +115,12 @@ function finish_loop() {
             }
 
             LOOP_LEN += 1;
+            IN_LOOP = true;
         }, 3000
     );
 }
 
-window.setInterval(move, LOOP_INTERVAL);
-window.setInterval(function () {
-    console.log('NEW CONTACTS: ' + NEW_FRENDS.length);
-}, LOOP_INTERVAL*10);
+
 
 function stop() {
     window.go=false;
@@ -172,3 +160,8 @@ function get_statistic() {
     console.log('check_blocking: ' + check_blocking());
     console.log('check_stuck: ' + check_stuck())
 }
+
+window.setInterval(move, LOOP_INTERVAL);
+window.setInterval(function () {
+    console.log('NEW CONTACTS: ' + NEW_FRENDS.length);
+}, LOOP_INTERVAL*10);
