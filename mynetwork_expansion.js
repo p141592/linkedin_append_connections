@@ -127,7 +127,7 @@ function finish_loop() {
 
 function stop() {
     window.go=false;
-    get_statistic()
+    get_statistic(Date())
 
 }
 
@@ -152,16 +152,21 @@ function scrole() {
     setTimeout(function(){$(window).scrollTop($(document).height());}, 1000);
 }
 
+function sign() {
+    console.log('==================================');
+    console.log('https://linkedin.com/in/p141592/');
+    console.log('==================================');
+}
+
 function good_message(){
     console.log('==================================');
     console.log('YOU HAVE ONE MORE THOUSAND INVITES');
     console.log('==================================');
     get_statistic();
-    console.log('==================================');
+    sign()
 }
 
-function get_statistic() {
-    let stop_date = Date();
+function get_statistic(stop_date='') {
     console.log('LOOP_LEN: ' + LOOP_LEN);
     console.log('NEW CONTACTS: ' + NEW_FRENDS.length);
     console.log('PARSED: ' + PARSED);
@@ -170,6 +175,12 @@ function get_statistic() {
     console.log('check_blocking: ' + check_blocking());
     console.log('check_stuck: ' + check_stuck());
     console.log('STUCK_COUNTER: ' + STUCK_COUNTER);
+    sign()
 }
+
+console.log('==================================');
+console.log('STARTING WORK');
+console.log('==================================');
+get_statistic();
 
 window.setInterval(move, LOOP_INTERVAL);
