@@ -5,11 +5,10 @@ window.debug = false;
 let START_DATE = Date();
 let PARSED = 0;
 let CONTACTS = $('.mn-pymk-list__card');
-let IN_LOOP = false;
 let EXCLUDE_LIST = new Set();
-let LAST_EXCLUDE_LEN = 0;
 let STUCK_COUNTER = 0;
-let max_STUCK_COUNTER = 11;
+let max_STUCK_COUNTER = 40;
+let LAST_EXCLUDE_LEN = 0;
 let MAX_EXCLUDE_LIST_SIZE = 120;
 let NEW_FRENDS = [];
 let EXCEPT_POSITIONS = [
@@ -57,21 +56,13 @@ function check_blocking() {
 function check_stuck() {
     let result = false;
     if(LAST_EXCLUDE_LEN === EXCLUDE_LIST.size) {
-        if (STUCK_COUNTER === max_STUCK_COUNTER){
-            result = true;
-        } else {
-            STUCK_COUNTER += 1
-        }
-
-    } else {
-        STUCK_COUNTER = 0;
+        result = true;
     }
     return result
 }
 
 function move() {
-    if (window.go && !IN_LOOP){
-        IN_LOOP = true;
+    if (window.go){
         LAST_EXCLUDE_LEN = EXCLUDE_LIST.size;
         CONTACTS = $('.mn-pymk-list__card');
         for(var contact=0; contact<CONTACTS.length; contact++){
@@ -103,9 +94,8 @@ function move() {
             EXCLUDE_LIST.add(_id);
             PARSED += 1;
         }
-
-        finish_loop();
     }
+    finish_loop();
 }
 
 function finish_loop() {
@@ -114,16 +104,21 @@ function finish_loop() {
             stop()
         }
 
-        if (!check_stuck()) {
+        if (check_stuck()) {
+            STUCK_COUNTER += 1;
+            scrole();
+        }
+        else if (!check_stuck() && STUCK_COUNTER > max_STUCK_COUNTER){
+            stop();
+        }
+        else {
+            scrole();
             setTimeout(function () {
                 list_erase();
-                IN_LOOP = false;
-            }, 1000);
+            }, 500);
             LOOP_LEN += 1;
-
         }
-    }, 2000);
-    scrole();
+    }, 1000);
 }
 
 function stop() {
