@@ -118,7 +118,7 @@ function finish_loop() {
             }, 500);
             LOOP_LEN += 1;
         }
-    }, 1000);
+    }, 2000);
 
     if (NEW_FRENDS.length && NEW_FRENDS.length % 1000 === 0){
         good_message();
@@ -126,6 +126,9 @@ function finish_loop() {
 }
 
 function stop() {
+    console.log('==================================');
+    console.log('STOP');
+    console.log('==================================');
     window.go=false;
     get_statistic(Date())
 
