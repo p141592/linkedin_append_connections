@@ -8,13 +8,13 @@ let IN_LOOP = true;
 let EXCLUDE_LIST = new Set();
 let LAST_EXCLUDE_LEN = 0;
 let STUCK_COUNTER = 0;
-let max_STUCK_COUNTER = 3;
+let max_STUCK_COUNTER = 11;
 let MAX_EXCLUDE_LIST_SIZE = 120;
 let NEW_FRENDS = [];
 let EXCEPT_POSITIONS = [
     'recruitment', 'recruiter', 'hr', 'recruiting', 'head', 'lead', 'cio', 'cto', 'founder'
 ];
-let LOOP_INTERVAL = 4000;
+let LOOP_INTERVAL = 3000;
 let LOOP_LEN = 0;
 let CHECK_USER;
 
@@ -116,7 +116,7 @@ function finish_loop() {
 
             LOOP_LEN += 1;
             IN_LOOP = true;
-        }, 3000
+        }, 2000
     );
 }
 
@@ -134,6 +134,7 @@ function list_erase() {
     while (EXCLUDE_LIST.size > MAX_EXCLUDE_LIST_SIZE && iteration_max > 0 ){
         remove_contact(iterator.next().value);
         iteration_max -= 1;
+        STUCK_COUNTER = 0;
     }
 }
 
@@ -146,7 +147,7 @@ function write_log(field) {
 
 function scrole() {
     $(window).scrollTop(-$(document).height());
-    setTimeout(function(){$(window).scrollTop($(document).height());}, 500);
+    setTimeout(function(){$(window).scrollTop($(document).height());}, 1000);
 }
 
 
@@ -163,5 +164,7 @@ function get_statistic() {
 
 window.setInterval(move, LOOP_INTERVAL);
 window.setInterval(function () {
-    console.log('NEW CONTACTS: ' + NEW_FRENDS.length);
+    if (window.debug){
+        console.log('NEW CONTACTS: ' + NEW_FRENDS.length);
+    }
 }, LOOP_INTERVAL*10);
