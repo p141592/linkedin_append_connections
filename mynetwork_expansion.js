@@ -9,7 +9,7 @@ let EXCLUDE_LIST = new Set();
 let STUCK_COUNTER = 0;
 let max_STUCK_COUNTER = 40;
 let LAST_EXCLUDE_LEN = 0;
-let MAX_EXCLUDE_LIST_SIZE = 120;
+let MAX_EXCLUDE_LIST_SIZE = 80;
 let NEW_FRENDS = [];
 let EXCEPT_POSITIONS = [
     'recruitment', 'recruiter', 'hr', 'recruiting', 'head', 'lead', 'cio', 'cto', 'founder'
@@ -94,8 +94,8 @@ function move() {
             EXCLUDE_LIST.add(_id);
             PARSED += 1;
         }
+        finish_loop();
     }
-    finish_loop();
 }
 
 function finish_loop() {
@@ -108,7 +108,7 @@ function finish_loop() {
             STUCK_COUNTER += 1;
             scrole();
         }
-        else if (!check_stuck() && STUCK_COUNTER > max_STUCK_COUNTER){
+        else if (check_stuck() && STUCK_COUNTER > max_STUCK_COUNTER){
             stop();
         }
         else {
@@ -119,6 +119,10 @@ function finish_loop() {
             LOOP_LEN += 1;
         }
     }, 1000);
+
+    if (NEW_FRENDS.length && NEW_FRENDS.length % 1000 === 0){
+        good_message();
+    }
 }
 
 function stop() {
@@ -137,7 +141,6 @@ function list_erase() {
     }
 }
 
-
 function write_log(field) {
     if (window.debug){
         console.log(field)
@@ -149,6 +152,13 @@ function scrole() {
     setTimeout(function(){$(window).scrollTop($(document).height());}, 1000);
 }
 
+function good_message(){
+    console.log('==================================');
+    console.log('YOU HAVE ONE MORE THOUSAND INVITES');
+    console.log('==================================');
+    get_statistic();
+    console.log('==================================');
+}
 
 function get_statistic() {
     let stop_date = Date();
@@ -158,7 +168,8 @@ function get_statistic() {
     console.log('START DATE: ' + START_DATE);
     console.log('STOP DATE: ' + stop_date);
     console.log('check_blocking: ' + check_blocking());
-    console.log('check_stuck: ' + check_stuck())
+    console.log('check_stuck: ' + check_stuck());
+    console.log('STUCK_COUNTER: ' + STUCK_COUNTER);
 }
 
 window.setInterval(move, LOOP_INTERVAL);
