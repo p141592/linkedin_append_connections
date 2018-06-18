@@ -1,7 +1,3 @@
-// Получение объектов
-// Фильтрация объектов
-// Кликакие с задержкой
-// Получение новых объектов, когда список пройден
 
 window.go = true;
 window.debug = false;
@@ -9,7 +5,7 @@ window.debug = false;
 let START_DATE = Date();
 let CONTACTS = $('.mn-pymk-list__card');
 let EXCLUDE_LIST = new Set();
-let MAX_EXCLUDE_LIST_SIZE = 20;
+let MAX_EXCLUDE_LIST_SIZE = 40;
 let EXCLUDE_LEN = 0;
 let NEW_FRENDS = [];
 let EXCEPT_POSITIONS = [
@@ -136,9 +132,11 @@ function stop() {
 }
 
 function list_erase() {
-    var iterator = EXCLUDE_LIST.values();
-    while (EXCLUDE_LIST.size > MAX_EXCLUDE_LIST_SIZE){
+    let iterator = EXCLUDE_LIST.values();
+    let iteration_max = 11;
+    while (EXCLUDE_LIST.size > MAX_EXCLUDE_LIST_SIZE && iteration_max > 0 ){
         remove_contact(iterator.next().value);
+        iteration_max -= 1;
     }
 }
 
