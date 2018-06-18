@@ -3,8 +3,9 @@ window.go = true;
 window.debug = false;
 
 let START_DATE = Date();
+let PARSED = 0;
 let CONTACTS = $('.mn-pymk-list__card');
-let IN_LOOP = true;
+let IN_LOOP = false;
 let EXCLUDE_LIST = new Set();
 let LAST_EXCLUDE_LEN = 0;
 let STUCK_COUNTER = 0;
@@ -69,7 +70,9 @@ function check_stuck() {
 }
 
 function move() {
-    if (window.go && IN_LOOP){
+    if (window.go && !IN_LOOP){
+        IN_LOOP = true;
+        scrole();
         LAST_EXCLUDE_LEN = EXCLUDE_LIST.size;
         CONTACTS = $('.mn-pymk-list__card');
         for(var contact=0; contact<CONTACTS.length; contact++){
@@ -99,8 +102,9 @@ function move() {
 
             }
             EXCLUDE_LIST.add(_id);
+            PARSED += 1;
         }
-        IN_LOOP = false;
+
         finish_loop();
     }
 }
@@ -108,14 +112,13 @@ function move() {
 function finish_loop() {
     setTimeout(function(){
           if (!check_blocking() && !check_stuck()){
-                scrole();
                 setTimeout(function(){list_erase()}, 1000);
             } else {
                 stop()
             }
 
             LOOP_LEN += 1;
-            IN_LOOP = true;
+            IN_LOOP = false;
         }, 2000
     );
 }
@@ -155,7 +158,7 @@ function get_statistic() {
     let stop_date = Date();
     console.log('LOOP_LEN: ' + LOOP_LEN);
     console.log('NEW CONTACTS: ' + NEW_FRENDS.length);
-    console.log('EXCLUDE_LIST: ' + EXCLUDE_LIST.size);
+    console.log('PARSED: ' + PARSED);
     console.log('START DATE: ' + START_DATE);
     console.log('STOP DATE: ' + stop_date);
     console.log('check_blocking: ' + check_blocking());
@@ -163,8 +166,3 @@ function get_statistic() {
 }
 
 window.setInterval(move, LOOP_INTERVAL);
-window.setInterval(function () {
-    if (window.debug){
-        console.log('NEW CONTACTS: ' + NEW_FRENDS.length);
-    }
-}, LOOP_INTERVAL*10);
