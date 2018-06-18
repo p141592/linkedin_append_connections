@@ -5,8 +5,8 @@ window.debug = false;
 let START_DATE = Date();
 let CONTACTS = $('.mn-pymk-list__card');
 let EXCLUDE_LIST = new Set();
+let LAST_EXCLUDE_LEN = 0;
 let MAX_EXCLUDE_LIST_SIZE = 120;
-let EXCLUDE_LEN = 0;
 let NEW_FRENDS = [];
 let EXCEPT_POSITIONS = [
     'recruitment', 'recruiter', 'hr', 'recruiting', 'head', 'lead', 'cio', 'cto', 'founder'
@@ -49,8 +49,18 @@ function check_blocking() {
     CHECK_USER = false;
     return result
 }
+
+function check_stuck() {
+    let result = false;
+    if(LAST_EXCLUDE_LEN === EXCLUDE_LIST.size) {
+        result = true;
+    }
+    return result
+}
+
 function move() {
     if (window.go){
+        LAST_EXCLUDE_LEN = EXCLUDE_LIST.size;
         CONTACTS = $('.mn-pymk-list__card');
         for(var contact=0; contact<CONTACTS.length; contact++){
             write_log('FIELD');
@@ -100,7 +110,6 @@ function move() {
 
             }
             EXCLUDE_LIST.add(_id);
-            EXCLUDE_LEN += 1;
         }
         finish_loop();
     }
@@ -108,7 +117,7 @@ function move() {
 
 function finish_loop() {
     setTimeout(function(){
-          if (!check_blocking()){
+          if (!check_blocking() && !check_stuck()){
                 scrole();
                 setTimeout(function(){list_erase()}, 1000);
             } else {
@@ -157,7 +166,9 @@ function get_statistic() {
     let stop_date = Date();
     console.log('LOOP_LEN: ' + LOOP_LEN);
     console.log('NEW CONTACTS: ' + NEW_FRENDS.length);
-    console.log('EXCLUDE_LIST: ' + EXCLUDE_LEN);
+    console.log('EXCLUDE_LIST: ' + EXCLUDE_LIST.size);
     console.log('START DATE: ' + START_DATE);
     console.log('STOP DATE: ' + stop_date);
+    console.log('check_blocking: ' + check_blocking());
+    console.log('check_stuck: ' + check_stuck())
 }
