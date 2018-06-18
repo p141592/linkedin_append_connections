@@ -24,4 +24,5 @@ https://www.linkedin.com/company/veon/
 |Sun Jun 17 2018 18:53:52 GMT+0300 | 110 | 2306 | 27 | Sun Jun 17 2018 19:01:18 GMT+0300 | blocked |
 |Mon Jun 18 2018 09:49:56 GMT+0300 | 290 | 4587 | 16 | Mon Jun 18 2018 10:10:43 GMT+0300 | error load network list | ![error load network list](statistic/Screen%20Shot%202018-06-18%20at%2010.23.18.png) 
 |Mon Jun 18 2018 15:34:24 GMT+0300 | 70 | 1444 | 168 | Mon Jun 18 2018 15:39:09 GMT+0300 | error load network list | ![error load network list](statistic/Screen%20Shot%202018-06-18%20at%2015.40.15.png)
+|Mon Jun 18 2018 16:06:30 GMT+0300 | 204 | 20933 | 38 | Mon Jun 18 2018 16:20:14 GMT+0300 | blocked |
 
