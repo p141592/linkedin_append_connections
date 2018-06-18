@@ -72,7 +72,6 @@ function check_stuck() {
 function move() {
     if (window.go && !IN_LOOP){
         IN_LOOP = true;
-        scrole();
         LAST_EXCLUDE_LEN = EXCLUDE_LIST.size;
         CONTACTS = $('.mn-pymk-list__card');
         for(var contact=0; contact<CONTACTS.length; contact++){
@@ -110,20 +109,22 @@ function move() {
 }
 
 function finish_loop() {
-    setTimeout(function(){
-          if (!check_blocking() && !check_stuck()){
-                setTimeout(function(){list_erase()}, 1000);
-            } else {
-                stop()
-            }
+    setTimeout(function () {
+        if (check_blocking()) {
+            stop()
+        }
 
+        if (!check_stuck()) {
+            setTimeout(function () {
+                list_erase();
+                IN_LOOP = false;
+            }, 1000);
             LOOP_LEN += 1;
-            IN_LOOP = false;
-        }, 2000
-    );
+
+        }
+    }, 2000);
+    scrole();
 }
-
-
 
 function stop() {
     window.go=false;
