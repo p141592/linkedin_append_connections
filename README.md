@@ -8,7 +8,7 @@ https://www.linkedin.com/mynetwork/invite-sent/nimisha-raja-b022a020/?isSendInvi
 
 **followers**
  
-https://www.linkedin.com/feed/followers/
+https://www.linkedin.com/feed/follow/
 
 **company**
 
@@ -28,4 +28,4 @@ https://www.linkedin.com/company/veon/
 |Jun 18 2018 19:01:51 | 1661 | 173280 | 20 | Jun 18 2018 20:52:41 | new profile cards doesn't load on the page |
 |Jun 18 2018 23:29:51 | 102 | - | 84 | Jun 18 2018 23:35:19 | check_stuck: true |
 |Jun 19 2018 00:17:31 | 34 | 8108 | 11 | Jun 19 2018 00:38:46 | short test | good work |
-
+|Jun 21 2018 12:18:36 | 304 | 127284 | 1077 | Jun 21 2018 14:13:48 | blocked |
