@@ -7,12 +7,14 @@ let PARSED = 0;
 let CONTACTS = $('.mn-pymk-list__card');
 let EXCLUDE_LIST = new Set();
 let STUCK_COUNTER = 0;
-let max_STUCK_COUNTER = 40;
+let max_STUCK_COUNTER = 15;
 let LAST_EXCLUDE_LEN = 0;
-let MAX_EXCLUDE_LIST_SIZE = 80;
+let MAX_APPEND_LIST_SIZE = 80;
 let NEW_FRENDS = [];
+let APPEND_LIST = new Set();
 let EXCEPT_POSITIONS = [
-    'recruitment', 'recruiter', 'hr', 'recruiting', 'head', 'lead', 'cio', 'cto', 'founder'
+    'recruitment', 'recruiter', 'hr', 'recruiting', 'head', 'lead',
+    'cio', 'cto', 'founder', 'talents', 'talent', 'hunter'
 ];
 let LOOP_INTERVAL = 3000;
 let LOOP_LEN = 0;
@@ -61,40 +63,73 @@ function check_stuck() {
     return result
 }
 
+function parse_contact(_id) {
+    let field = CONTACTS[contact].children[0];
+    let _name = $(field.children[2].children[0].children[1]).text();
+    let _button = field.children[3].children[0];
+    let _position = $(field.children[2].children[0].children[3]).text().toLowerCase().split(' ');
+
+    let _int = 0;
+    let _int_field;
+    try {
+        _int_field = $(field.children[2].children[1].children[0].children[1]).text();
+        let reg = /\d+/g;
+        _int = parseInt(_int_field.match(reg)[0]);
+    } catch(err){}
+}
+
+function invite(_id) {
+    if (check_position(_position) || _int && _int < 30){
+        if (!check_exclude(_id)){
+            NEW_FRENDS.push(_name);
+            CHECK_USER = _id;
+            console.log(_name);
+            console.log(_int);
+            _button.click();
+        }
+
+    }
+}
+
+function invite_loop() {
+    if ($('.mn-pymk-list__card').length > 50){
+
+    }
+}
+
 function move() {
     if (window.go){
         LAST_EXCLUDE_LEN = EXCLUDE_LIST.size;
-        CONTACTS = $('.mn-pymk-list__card');
-        for(var contact=0; contact<CONTACTS.length; contact++){
-            let field = CONTACTS[contact].children[0];
-            let _id = CONTACTS[contact].children[0].getAttribute('id');
-            let _name = $(field.children[2].children[0].children[1]).text();
-            let _button = field.children[3].children[0];
-            let _position = $(field.children[2].children[0].children[3]).text().toLowerCase().split(' ');
+        CONTACTS = $('.mn-pymk-list__card').children();
 
-            let _int = 0;
-            let _int_field;
-            try {
-                _int_field = $(field.children[2].children[1].children[0].children[1]).text();
-                let reg = /\d+/g;
-                _int = parseInt(_int_field.match(reg)[0]);
-            } catch(err){}
-
-            if (check_position(_position) || _int && _int < 30){
-                if (!check_exclude(_id)){
-                    NEW_FRENDS.push(_name);
-                    CHECK_USER = _id;
-                    console.log(_name);
-                    console.log(_int);
-                    _button.click();
-
-                }
-
-            }
-            EXCLUDE_LIST.add(_id);
-            PARSED += 1;
+        for(var contact=0; contact<CONTACTS.length; contact++) {
+            let _id = CONTACTS[contact].getAttribute('id');
+            APPEND_LIST.add(_id)
         }
-        finish_loop();
+
+        scrole();
+
+        if (check_stuck() && STUCK_COUNTER > max_STUCK_COUNTER) {
+            stop();
+        }
+        else if (check_stuck()){
+            STUCK_COUNTER += 1;
+        } else {
+            STUCK_COUNTER = 0;
+        }
+        LOOP_LEN += 1;
+        if (NEW_FRENDS.length && NEW_FRENDS.length % 1000 === 0){
+            good_message();
+        }
+    }
+}
+
+function parse() {
+    let iterator = APPEND_LIST.values();
+    let iteration_max = 11;
+    while (APPEND_LIST.size > MAX_APPEND_LIST_SIZE && iteration_max > 0 ){
+        remove_contact(iterator.next().value);
+        iteration_max -= 1;
     }
 }
 
@@ -103,26 +138,9 @@ function finish_loop() {
         if (check_blocking()) {
             stop()
         }
-
-        if (check_stuck()) {
-            STUCK_COUNTER += 1;
-            scrole();
-        }
-        else if (check_stuck() && STUCK_COUNTER > max_STUCK_COUNTER){
-            stop();
-        }
-        else {
-            scrole();
-            setTimeout(function () {
-                list_erase();
-            }, 500);
-            LOOP_LEN += 1;
-        }
     }, 2000);
 
-    if (NEW_FRENDS.length && NEW_FRENDS.length % 1000 === 0){
-        good_message();
-    }
+
 }
 
 function stop() {
@@ -187,3 +205,4 @@ console.log('==================================');
 get_statistic();
 
 window.setInterval(move, LOOP_INTERVAL);
+window.setInterval(parse, LOOP_INTERVAL+1000);
