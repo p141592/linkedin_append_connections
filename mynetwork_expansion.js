@@ -1,27 +1,119 @@
-
-window.go = true;
-window.debug = false;
-
-let START_DATE = Date();
-let PARSED = 0;
+const START_DATE = Date();
 let CONTACTS = $('.mn-pymk-list__card');
-let EXCLUDE_LIST = new Set();
-let STUCK_COUNTER = 0;
-let max_STUCK_COUNTER = 15;
-let LAST_EXCLUDE_LEN = 0;
-let MAX_APPEND_LIST_SIZE = 80;
-let NEW_FRENDS = [];
-let APPEND_LIST = new Set();
-let EXCEPT_POSITIONS = [
+const APPEND_LIST = new Set();
+const PASS_POSITIONS = [
     'recruitment', 'recruiter', 'hr', 'recruiting', 'head', 'lead',
-    'cio', 'cto', 'founder', 'talents', 'talent', 'hunter'
+    'cio', 'cto', 'founder', 'talents', 'talent', 'hunter', 'hiring'
 ];
-let LOOP_INTERVAL = 3000;
+const LOOP_INTERVAL = 4000;
 let LOOP_LEN = 0;
-let CHECK_USER;
+let NEW_FRIENDS = 0;
+let PARSED = 0;
+let CHECK_LEN = 0;
+let CURRENT_LEN = -1;
+let STUCK_COUNT = 0;
+const max_STUCK_COUNT = 10;
 
-function check_exclude(_id) {
-    return EXCLUDE_LIST.has(_id);
+let MOVE_LOOP;
+let INVITE_LOOP;
+
+function move() {
+    CONTACTS = $('.mn-pymk-list__card').children();
+    CURRENT_LEN = CONTACTS.length;
+    for(let contact=0; contact<CONTACTS.length; contact++) {
+        let _id = CONTACTS[contact].getAttribute('id');
+        APPEND_LIST.add(_id)
+    }
+    LOOP_LEN += 1;
+    scrole();
+
+    setTimeout(function () {
+        if (CURRENT_LEN === CHECK_LEN && STUCK_COUNT === max_STUCK_COUNT){
+            stop();
+            console.log('YOU STUCK')
+        } else if (CURRENT_LEN === CHECK_LEN){
+            STUCK_COUNT += 1;
+        } else {
+            STUCK_COUNT = 0;
+        }
+        CHECK_LEN = CURRENT_LEN;
+    }, 500)
+}
+
+function invite_move() {
+    if (APPEND_LIST.size > 50){
+        let value = get_set_value();
+
+        if (check_element(value)){
+            invite(value);
+        }
+
+        if (NEW_FRIENDS && NEW_FRIENDS % 1000 === 0){
+            good_message();
+        }
+    }
+}
+
+function invite(_id) {
+    let contact = parse_contact(_id);
+    if (check_position(contact['position']) || contact['int'] && contact['int'] < 30){
+        contact['button'].click();
+        NEW_FRIENDS += 1
+    } else {
+        contact['close'].click();
+    }
+
+    setTimeout(function (_id) {
+        if (check_element(_id)){
+            stop();
+            console.log('YOU ARE BLOCKING')
+        }
+    }, 300);
+
+    APPEND_LIST.delete(_id);
+    PARSED += 1;
+}
+
+function parse_contact(_id) {
+    console.log(_id);
+    let field = $('#'+_id);
+
+    let contact = {
+        'close': field.children()[0],
+        'name': $(field.children()[2].children[0].children[1]).text(),
+        'button': field.children()[3].children[0],
+        'position': $(field.children()[2].children[0].children[3]).text().toLowerCase().split(' ')
+    };
+
+    let _int = 0;
+    let _int_field;
+    try {
+        _int_field = $(field.children()[2].children[1].children[0].children[1]).text();
+        let reg = /\d+/g;
+        _int = parseInt(_int_field.match(reg)[0]);
+    } catch(err){}
+    contact['int'] = _int;
+
+    return contact
+}
+
+function get_set_value() {
+    let ITERATOR = null;
+    ITERATOR = APPEND_LIST.values();
+    return ITERATOR.next().value;
+}
+function check_position(position) {
+    let result = false;
+    position.forEach(function(element) {
+      if (list_content(element, PASS_POSITIONS)){
+          result = true;
+      }
+    });
+    return result;
+}
+
+function check_element(_id) {
+    return !!document.getElementById(_id);
 }
 
 function list_content(object, list) {
@@ -31,146 +123,10 @@ function list_content(object, list) {
     }
     return false
 }
-function check_position(position) {
-    var result = false;
-    position.forEach(function(element) {
-      if (list_content(element, EXCEPT_POSITIONS)){
-          result = true;
-      }
-    });
-    return result;
-}
-
-function remove_contact(_id) {
-    $('#'+_id).parent().remove();
-    EXCLUDE_LIST.delete(_id);
-}
-
-function check_blocking() {
-    let result = false;
-    if(CHECK_USER && $('#'+CHECK_USER).length > 0) {
-        result = true;
-    }
-    CHECK_USER = false;
-    return result
-}
-
-function check_stuck() {
-    let result = false;
-    if(LAST_EXCLUDE_LEN === EXCLUDE_LIST.size) {
-        result = true;
-    }
-    return result
-}
-
-function parse_contact(_id) {
-    let field = CONTACTS[contact].children[0];
-    let _name = $(field.children[2].children[0].children[1]).text();
-    let _button = field.children[3].children[0];
-    let _position = $(field.children[2].children[0].children[3]).text().toLowerCase().split(' ');
-
-    let _int = 0;
-    let _int_field;
-    try {
-        _int_field = $(field.children[2].children[1].children[0].children[1]).text();
-        let reg = /\d+/g;
-        _int = parseInt(_int_field.match(reg)[0]);
-    } catch(err){}
-}
-
-function invite(_id) {
-    if (check_position(_position) || _int && _int < 30){
-        if (!check_exclude(_id)){
-            NEW_FRENDS.push(_name);
-            CHECK_USER = _id;
-            console.log(_name);
-            console.log(_int);
-            _button.click();
-        }
-
-    }
-}
-
-function invite_loop() {
-    if ($('.mn-pymk-list__card').length > 50){
-
-    }
-}
-
-function move() {
-    if (window.go){
-        LAST_EXCLUDE_LEN = EXCLUDE_LIST.size;
-        CONTACTS = $('.mn-pymk-list__card').children();
-
-        for(var contact=0; contact<CONTACTS.length; contact++) {
-            let _id = CONTACTS[contact].getAttribute('id');
-            APPEND_LIST.add(_id)
-        }
-
-        scrole();
-
-        if (check_stuck() && STUCK_COUNTER > max_STUCK_COUNTER) {
-            stop();
-        }
-        else if (check_stuck()){
-            STUCK_COUNTER += 1;
-        } else {
-            STUCK_COUNTER = 0;
-        }
-        LOOP_LEN += 1;
-        if (NEW_FRENDS.length && NEW_FRENDS.length % 1000 === 0){
-            good_message();
-        }
-    }
-}
-
-function parse() {
-    let iterator = APPEND_LIST.values();
-    let iteration_max = 11;
-    while (APPEND_LIST.size > MAX_APPEND_LIST_SIZE && iteration_max > 0 ){
-        remove_contact(iterator.next().value);
-        iteration_max -= 1;
-    }
-}
-
-function finish_loop() {
-    setTimeout(function () {
-        if (check_blocking()) {
-            stop()
-        }
-    }, 2000);
-
-
-}
-
-function stop() {
-    console.log('==================================');
-    console.log('STOP');
-    console.log('==================================');
-    window.go=false;
-    get_statistic(Date())
-
-}
-
-function list_erase() {
-    let iterator = EXCLUDE_LIST.values();
-    let iteration_max = 11;
-    while (EXCLUDE_LIST.size > MAX_EXCLUDE_LIST_SIZE && iteration_max > 0 ){
-        remove_contact(iterator.next().value);
-        iteration_max -= 1;
-        STUCK_COUNTER = 0;
-    }
-}
-
-function write_log(field) {
-    if (window.debug){
-        console.log(field)
-    }
-}
 
 function scrole() {
     $(window).scrollTop(-$(document).height());
-    setTimeout(function(){$(window).scrollTop($(document).height());}, 1000);
+    setTimeout(function(){$(window).scrollTop($(document).height())}, 1000);
 }
 
 function sign() {
@@ -189,20 +145,30 @@ function good_message(){
 
 function get_statistic(stop_date='') {
     console.log('LOOP_LEN: ' + LOOP_LEN);
-    console.log('NEW CONTACTS: ' + NEW_FRENDS.length);
+    console.log('NEW CONTACTS: ' + NEW_FRIENDS);
     console.log('PARSED: ' + PARSED);
     console.log('START DATE: ' + START_DATE);
     console.log('STOP DATE: ' + stop_date);
-    console.log('check_blocking: ' + check_blocking());
-    console.log('check_stuck: ' + check_stuck());
-    console.log('STUCK_COUNTER: ' + STUCK_COUNTER);
     sign()
 }
 
-console.log('==================================');
-console.log('STARTING WORK');
-console.log('==================================');
-get_statistic();
+function stop() {
+    clearInterval(MOVE_LOOP);
+    clearInterval(INVITE_LOOP);
+    console.log('==================================');
+    console.log('STOP');
+    console.log('==================================');
+    get_statistic(Date())
 
-window.setInterval(move, LOOP_INTERVAL);
-window.setInterval(parse, LOOP_INTERVAL+1000);
+}
+
+function start() {
+    console.log('==================================');
+    console.log('STARTING WORK');
+    console.log('==================================');
+    get_statistic();
+    MOVE_LOOP = window.setInterval(move, LOOP_INTERVAL);
+    INVITE_LOOP = window.setInterval(invite_move, 1000);
+}
+
+start();

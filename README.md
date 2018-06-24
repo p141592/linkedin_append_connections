@@ -31,3 +31,4 @@ https://www.linkedin.com/company/veon/
 |Jun 21 2018 12:18:36 | 304 | 127284 | 1077 | Jun 21 2018 14:13:48 | blocked |
 |Jun 22 2018 14:03:35 | 184 | 72528 | 465 | Jun 22 2018 15:02:09 | short test | good work |
 |Jun 22 2018 15:11:05 | 186 | 179867 | 500 | Jun 22 2018 17:31:01 | check_stuck: true | STUCK_COUNTER: 927 |
+|Jun 24 2018 18:11:00 | 70 | 11451 | 391 | Jun 24 2018 18:24:53 | check_blocking: true |
