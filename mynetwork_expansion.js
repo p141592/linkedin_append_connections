@@ -1,16 +1,18 @@
+window.debug=false;
 const START_DATE = Date();
 let CONTACTS = $('.mn-pymk-list__card');
-const APPEND_LIST = new Set();
+let APPEND_LIST = new Set();
 const PASS_POSITIONS = [
     'recruitment', 'recruiter', 'hr', 'recruiting', 'head', 'lead',
-    'cio', 'cto', 'founder', 'talents', 'talent', 'hunter', 'hiring'
+    'cio', 'cto', 'founder', 'talents', 'talent', 'hunter', 'hiring',
+    'chief'
 ];
-const LOOP_INTERVAL = 4000;
+const LOOP_INTERVAL = 1000;
 let LOOP_LEN = 0;
 let NEW_FRIENDS = 0;
 let PARSED = 0;
-let CHECK_LEN = 0;
-let CURRENT_LEN = -1;
+let CHECK_CONTACT_ID = '';
+let LAST_CONTACT_ID = '0';
 let STUCK_COUNT = 0;
 const max_STUCK_COUNT = 10;
 
@@ -18,35 +20,33 @@ let MOVE_LOOP;
 let INVITE_LOOP;
 
 function move() {
-    CONTACTS = $('.mn-pymk-list__card').children();
-    CURRENT_LEN = CONTACTS.length;
-    for(let contact=0; contact<CONTACTS.length; contact++) {
-        let _id = CONTACTS[contact].getAttribute('id');
-        APPEND_LIST.add(_id)
-    }
-    LOOP_LEN += 1;
-    scrole();
-
-    setTimeout(function () {
-        if (CURRENT_LEN === CHECK_LEN && STUCK_COUNT === max_STUCK_COUNT){
-            stop();
-            console.log('YOU STUCK')
-        } else if (CURRENT_LEN === CHECK_LEN){
-            STUCK_COUNT += 1;
-        } else {
-            STUCK_COUNT = 0;
+    if (APPEND_LIST.size<55) {
+        CONTACTS = $('.mn-pymk-list__card').children();
+        LAST_CONTACT_ID = CONTACTS[CONTACTS.length-1].getAttribute('id');
+        for (let contact = 0; contact < CONTACTS.length; contact++) {
+            let _id = CONTACTS[contact].getAttribute('id');
+            APPEND_LIST.add(_id)
         }
-        CHECK_LEN = CURRENT_LEN;
-    }, 500)
+        LOOP_LEN += 1;
+        scrole();
+
+        setTimeout(function () {
+            if (LAST_CONTACT_ID === CHECK_CONTACT_ID && STUCK_COUNT === max_STUCK_COUNT) {
+                stop();
+                console.log('YOU STUCK')
+            } else if (LAST_CONTACT_ID === CHECK_CONTACT_ID) {
+                STUCK_COUNT += 1;
+            } else {
+                STUCK_COUNT = 0;
+            }
+            CHECK_CONTACT_ID = LAST_CONTACT_ID;
+        }, 1000)
+    }
 }
 
 function invite_move() {
     if (APPEND_LIST.size > 50){
-        let value = get_set_value();
-
-        if (check_element(value)){
-            invite(value);
-        }
+        invite(get_set_value());
 
         if (NEW_FRIENDS && NEW_FRIENDS % 1000 === 0){
             good_message();
@@ -55,12 +55,21 @@ function invite_move() {
 }
 
 function invite(_id) {
+    console.log(_id);
     let contact = parse_contact(_id);
-    if (check_position(contact['position']) || contact['int'] && contact['int'] < 30){
-        contact['button'].click();
+    if (check_element(_id) && check_position(contact['position']) || contact['int'] && contact['int'] < 30){
+        if (!window.debug){
+            contact['button'].click();
+        } else {
+            $('#'+_id).parent().remove();
+
+        }
+        console.log('INVITE');
         NEW_FRIENDS += 1
     } else {
-        contact['close'].click();
+        $('#'+_id).parent().remove();
+        //contact['close'].click();
+        console.log('REMOVE');
     }
 
     setTimeout(function (_id) {
@@ -68,14 +77,13 @@ function invite(_id) {
             stop();
             console.log('YOU ARE BLOCKING')
         }
-    }, 300);
+    }, 800);
 
     APPEND_LIST.delete(_id);
     PARSED += 1;
 }
 
 function parse_contact(_id) {
-    console.log(_id);
     let field = $('#'+_id);
 
     let contact = {
@@ -98,10 +106,9 @@ function parse_contact(_id) {
 }
 
 function get_set_value() {
-    let ITERATOR = null;
-    ITERATOR = APPEND_LIST.values();
-    return ITERATOR.next().value;
+    return Array.from(APPEND_LIST).pop();
 }
+
 function check_position(position) {
     let result = false;
     position.forEach(function(element) {
@@ -168,7 +175,7 @@ function start() {
     console.log('==================================');
     get_statistic();
     MOVE_LOOP = window.setInterval(move, LOOP_INTERVAL);
-    INVITE_LOOP = window.setInterval(invite_move, 1000);
+    INVITE_LOOP = window.setInterval(invite_move, LOOP_INTERVAL);
 }
 
 start();
