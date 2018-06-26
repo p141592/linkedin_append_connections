@@ -15,12 +15,14 @@ let CHECK_CONTACT_ID = '';
 let LAST_CONTACT_ID = '0';
 let STUCK_COUNT = 0;
 const max_STUCK_COUNT = 10;
+const min_APPEND_LIST_SIZE = 50;
+let WHILE_SAFE = 0;
 
 let MOVE_LOOP;
 let INVITE_LOOP;
 
 function move() {
-    if (APPEND_LIST.size<55) {
+    if (APPEND_LIST.size <= min_APPEND_LIST_SIZE) {
         CONTACTS = $('.mn-pymk-list__card').children();
         LAST_CONTACT_ID = CONTACTS[CONTACTS.length-1].getAttribute('id');
         for (let contact = 0; contact < CONTACTS.length; contact++) {
@@ -40,13 +42,13 @@ function move() {
                 STUCK_COUNT = 0;
             }
             CHECK_CONTACT_ID = LAST_CONTACT_ID;
-        }, 1000)
+        }, LOOP_INTERVAL)
     }
 }
 
 function invite_move() {
-    if (APPEND_LIST.size > 50){
-        invite(get_set_value());
+    if (APPEND_LIST.size >= min_APPEND_LIST_SIZE){
+        invite(pop_set_value());
 
         if (NEW_FRIENDS && NEW_FRIENDS % 1000 === 0){
             good_message();
@@ -55,31 +57,40 @@ function invite_move() {
 }
 
 function invite(_id) {
-    console.log(_id);
-    let contact = parse_contact(_id);
-    if (check_element(_id) && check_position(contact['position']) || contact['int'] && contact['int'] < 30){
-        if (!window.debug){
-            contact['button'].click();
-        } else {
-            $('#'+_id).parent().remove();
-
-        }
-        console.log('INVITE');
-        NEW_FRIENDS += 1
-    } else {
-        $('#'+_id).parent().remove();
-        //contact['close'].click();
-        console.log('REMOVE');
+    if (window.debug) {
+        console.log(_id);
     }
+    let contact = parse_contact(_id);
+    if (check_position(contact['position']) || contact['int'] && contact['int'] < 30) {
+        if (!window.debug) {
+            contact['button'].click();
+
+        } else {
+            console.log('INVITE');
+            $('#'+_id).parent().remove();
+        }
+
+        NEW_FRIENDS += 1
+
+    } else {
+        if (!window.debug){
+            contact['close'].click();
+
+        } else {
+            console.log('REMOVE');
+            $('#'+_id).parent().remove();
+        }
+
+    }
+
 
     setTimeout(function (_id) {
         if (check_element(_id)){
             stop();
             console.log('YOU ARE BLOCKING')
         }
-    }, 800);
+    }, LOOP_INTERVAL);
 
-    APPEND_LIST.delete(_id);
     PARSED += 1;
 }
 
@@ -105,8 +116,21 @@ function parse_contact(_id) {
     return contact
 }
 
-function get_set_value() {
-    return Array.from(APPEND_LIST).pop();
+function pop_set_value() {
+    let result = '';
+    while (!check_element(result)){
+        if (WHILE_SAFE > 100){
+            break;
+            stop();
+        }
+        APPEND_LIST.delete(result);
+        result = Array.from(APPEND_LIST).pop();
+        WHILE_SAFE += 1
+    }
+    WHILE_SAFE = 0;
+
+    APPEND_LIST.delete(result);
+    return result;
 }
 
 function check_position(position) {
