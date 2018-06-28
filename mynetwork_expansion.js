@@ -17,6 +17,7 @@ let STUCK_COUNT = 0;
 const max_STUCK_COUNT = 10;
 const min_APPEND_LIST_SIZE = 50;
 let WHILE_SAFE = 0;
+const max_MUTUAL_FIENDS = 30;
 
 let MOVE_LOOP;
 let INVITE_LOOP;
@@ -61,7 +62,7 @@ function invite(_id) {
         console.log(_id);
     }
     let contact = parse_contact(_id);
-    if (check_position(contact['position']) || contact['int'] && contact['int'] < 30) {
+    if (check_position(contact['position']) || contact['int'] && contact['int'] < max_MUTUAL_FIENDS) {
         if (!window.debug) {
             contact['button'].click();
 
@@ -74,7 +75,8 @@ function invite(_id) {
 
     } else {
         if (!window.debug){
-            contact['close'].click();
+            //contact['close'].click();
+            $('#'+_id).parent().remove();
 
         } else {
             console.log('REMOVE');
