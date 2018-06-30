@@ -26,10 +26,12 @@ function move() {
     if (APPEND_LIST.size <= min_APPEND_LIST_SIZE) {
         CONTACTS = $('.mn-pymk-list__card').children();
         LAST_CONTACT_ID = CONTACTS[CONTACTS.length-1].getAttribute('id');
-        for (let contact = 0; contact < CONTACTS.length; contact++) {
-            let _id = CONTACTS[contact].getAttribute('id');
+
+        Array.from(CONTACTS).forEach(function(element) {
+            let _id = element.getAttribute('id');
             APPEND_LIST.add(_id)
-        }
+        });
+
         LOOP_LEN += 1;
         scrole();
 
@@ -94,6 +96,14 @@ function invite(_id) {
     }, LOOP_INTERVAL);
 
     PARSED += 1;
+}
+
+function approve_incoming_invite() {
+    let invites_DOM = $('.mn-invitation-list.ember-view').children();
+
+    Array.from(invites_DOM).forEach(function(element) {
+        element.children[0].children[1].children[1].click();
+    });
 }
 
 function parse_contact(_id) {
@@ -199,8 +209,9 @@ function start() {
     console.log('==================================');
     console.log('STARTING WORK');
     console.log('==================================');
+    approve_incoming_invite();
     get_statistic();
-    MOVE_LOOP = window.setInterval(move, LOOP_INTERVAL);
+    MOVE_LOOP = window.setInterval(move, LOOP_INTERVAL+500);
     INVITE_LOOP = window.setInterval(invite_move, LOOP_INTERVAL);
 }
 
