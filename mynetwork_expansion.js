@@ -99,11 +99,16 @@ function invite(_id) {
 }
 
 function approve_incoming_invite() {
-    let invites_DOM = $('.mn-invitation-list.ember-view').children();
+    $('[data-control-name="see_more_invites"]').click();
 
-    Array.from(invites_DOM).forEach(function(element) {
-        element.children[0].children[1].children[1].click();
-    });
+    setTimeout(function () {
+        let invites_DOM = $('.mn-invitation-list.ember-view').children();
+
+        Array.from(invites_DOM).forEach(function(element) {
+            element.children[0].children[1].children[1].click();
+        });
+    }, LOOP_INTERVAL);
+
 }
 
 function parse_contact(_id) {
