@@ -1,4 +1,5 @@
-window.debug=false;
+// page: https://www.linkedin.com/mynetwork/
+
 const START_DATE = Date();
 let CONTACTS = $('.mn-pymk-list__card');
 let APPEND_LIST = new Set();
@@ -11,12 +12,12 @@ const LOOP_INTERVAL = 1000;
 let LOOP_LEN = 0;
 let NEW_FRIENDS = 0;
 let PARSED = 0;
-let CHECK_CONTACT_ID = '';
-let LAST_CONTACT_ID = '0';
-let STUCK_COUNT = 0;
+let CHECK_CONTACT_ID;
+let LAST_CONTACT_ID;
+let STUCK_COUNT;
 const max_STUCK_COUNT = 10;
 const min_APPEND_LIST_SIZE = 50;
-let WHILE_SAFE = 0;
+let WHILE_SAFE;
 const max_MUTUAL_FIENDS = 30;
 
 let MOVE_LOOP;
@@ -45,7 +46,7 @@ function move() {
                 STUCK_COUNT = 0;
             }
             CHECK_CONTACT_ID = LAST_CONTACT_ID;
-        }, LOOP_INTERVAL)
+        }, LOOP_INTERVAL*2)
     }
 }
 
@@ -141,7 +142,10 @@ function pop_set_value() {
             stop();
         }
         APPEND_LIST.delete(result);
-        result = Array.from(APPEND_LIST).pop();
+        let list = Array.from(APPEND_LIST);
+        if (list.length > 0){
+            result = list[0];
+        }
         WHILE_SAFE += 1
     }
     WHILE_SAFE = 0;
@@ -200,6 +204,14 @@ function get_statistic(stop_date='') {
     sign()
 }
 
+function init_params() {
+    window.debug=false;
+    CHECK_CONTACT_ID = '';
+    LAST_CONTACT_ID = '0';
+    STUCK_COUNT = 0;
+    WHILE_SAFE = 0;
+}
+
 function stop() {
     clearInterval(MOVE_LOOP);
     clearInterval(INVITE_LOOP);
@@ -214,6 +226,7 @@ function start() {
     console.log('==================================');
     console.log('STARTING WORK');
     console.log('==================================');
+    init_params();
     approve_incoming_invite();
     get_statistic();
     MOVE_LOOP = window.setInterval(move, LOOP_INTERVAL+500);
