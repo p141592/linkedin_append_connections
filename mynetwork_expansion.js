@@ -223,6 +223,7 @@ function stop() {
 }
 
 function start() {
+    $('[role="presentation"]').remove();
     console.log('==================================');
     console.log('STARTING WORK');
     console.log('==================================');
