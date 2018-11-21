@@ -25,7 +25,7 @@ let INVITE_LOOP;
 
 function move() {
     if (APPEND_LIST.size <= min_APPEND_LIST_SIZE) {
-        CONTACTS = $('.mn-pymk-list__card').children();
+        CONTACTS = $('.mn-discovery-entity-list').children();
         LAST_CONTACT_ID = CONTACTS[CONTACTS.length-1].getAttribute('id');
 
         Array.from(CONTACTS).forEach(function(element) {
@@ -71,7 +71,7 @@ function invite(_id) {
 
         } else {
             console.log('INVITE');
-            $('#'+_id).parent().remove();
+            $('#'+_id).remove();
         }
 
         NEW_FRIENDS += 1
@@ -79,11 +79,11 @@ function invite(_id) {
     } else {
         if (!window.debug){
             //contact['close'].click();
-            $('#'+_id).parent().remove();
+            $('#'+_id).remove();
 
         } else {
             console.log('REMOVE');
-            $('#'+_id).parent().remove();
+            $('#'+_id).remove();
         }
 
     }
@@ -114,18 +114,17 @@ function approve_incoming_invite() {
 
 function parse_contact(_id) {
     let field = $('#'+_id);
-
+    console.log(_id);
     let contact = {
-        'close': field.children()[0],
-        'name': $(field.children()[2].children[0].children[1]).text(),
-        'button': field.children()[3].children[0],
-        'position': $(field.children()[2].children[0].children[3]).text().toLowerCase().split(' ')
+        'name': $($($($($($(field.children()[0]).children()[0]).children()[0]).children()[0]).children()[1]).children()[1]).text(),
+        'button': $($($(field.children()[0]).children()[0]).children()[1]).children(),
+        'position': $($($($($($(field.children()[0]).children()[0]).children()[0]).children()[0]).children()[1]).children()[3]).text().toLowerCase().split(' ')
     };
 
     let _int = 0;
     let _int_field;
     try {
-        _int_field = $(field.children()[2].children[1].children[0].children[1]).text();
+        _int_field = $($($($($($(field.children()[0]).children()[0]).children()[0]).children()[1]).children()[0]).children()[1]).text();
         let reg = /\d+/g;
         _int = parseInt(_int_field.match(reg)[0]);
     } catch(err){}
