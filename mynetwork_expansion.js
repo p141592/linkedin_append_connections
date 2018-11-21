@@ -4,9 +4,7 @@ const START_DATE = Date();
 let CONTACTS = $('.mn-pymk-list__card');
 let APPEND_LIST = new Set();
 const PASS_POSITIONS = [
-    'recruitment', 'recruiter', 'hr', 'recruiting', 'head', 'lead',
-    'cio', 'cto', 'founder', 'talents', 'talent', 'hunter', 'hiring',
-    'chief'
+    'recruitment', 'recruiter', 'hr', 'recruiting', 'talents', 'talent', 'hunter', 'hiring',
 ];
 const LOOP_INTERVAL = 1000;
 let LOOP_LEN = 0;
@@ -114,7 +112,6 @@ function approve_incoming_invite() {
 
 function parse_contact(_id) {
     let field = $('#'+_id);
-    console.log(_id);
     let contact = {
         'name': $($($($($($(field.children()[0]).children()[0]).children()[0]).children()[0]).children()[1]).children()[1]).text(),
         'button': $($($(field.children()[0]).children()[0]).children()[1]).children(),
