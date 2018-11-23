@@ -59,6 +59,9 @@ function invite_move() {
 }
 
 function invite(_id) {
+    if ($('.ip-fuse-limit-alert').is(':visible')){
+        stop();
+    }
     if (window.debug) {
         console.log(_id);
     }
