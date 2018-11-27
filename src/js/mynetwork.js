@@ -4,7 +4,8 @@ const START_DATE = Date();
 let CONTACTS = $('.mn-pymk-list__card');
 let APPEND_LIST = new Set();
 const PASS_POSITIONS = [
-    'recruitment', 'recruiter', 'hr', 'recruiting', 'talents', 'talent', 'hunter', 'hiring',
+    'recruitment', 'recruiter', 'hr', 'recruiting', 'talents', 'talent', 'hunter', 'hiring', 'python',
+    'golang', 'go', 'backend', 'teamlead'
 ];
 const LOOP_INTERVAL = 1000;
 let LOOP_LEN = 0;
@@ -221,6 +222,7 @@ function stop() {
 
 function stuck() {
     clearInterval(INVITE_LOOP);
+    STUCKED = true;
     console.log('==================================');
     console.log('YOU STUCK');
     console.log('==================================');
