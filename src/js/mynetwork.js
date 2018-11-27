@@ -3,7 +3,7 @@
 const START_DATE = Date();
 let CONTACTS = $('.mn-pymk-list__card');
 let APPEND_LIST = new Set();
-const PASS_POSITIONS = [
+const ACCEPT_POSITIONS = [
     'recruitment', 'recruiter', 'hr', 'recruiting', 'talents', 'talent', 'hunter', 'hiring', 'python',
     'golang', 'go', 'backend', 'teamlead'
 ];
@@ -22,6 +22,8 @@ const max_MUTUAL_FIENDS = 30;
 let STUCKED = false;
 let MOVE_LOOP;
 let INVITE_LOOP;
+
+let EXCLUDED_NAMES = [''];
 
 function move() {
     if (APPEND_LIST.size <= min_APPEND_LIST_SIZE) {
@@ -50,7 +52,7 @@ function move() {
 }
 
 function invite_move() {
-    if (APPEND_LIST.size >= min_APPEND_LIST_SIZE || APPEND_LIST.size > 0 && STUCKED ){
+    if ((APPEND_LIST.size >= min_APPEND_LIST_SIZE) || (APPEND_LIST.size > 0 && STUCKED)){
         invite(pop_set_value());
 
         if (NEW_FRIENDS && NEW_FRIENDS % 1000 === 0){
@@ -59,6 +61,8 @@ function invite_move() {
     } else if (APPEND_LIST.size === 0 && STUCKED){
         stop();
     }
+    console.log(APPEND_LIST.size);
+    console.log(STUCKED);
 }
 
 function invite(_id) {
@@ -66,7 +70,7 @@ function invite(_id) {
         console.log(_id);
     }
     let contact = parse_contact(_id);
-    if (check_position(contact['position']) || contact['int'] && contact['int'] < max_MUTUAL_FIENDS) {
+    if ((check_position(contact['position']) || contact['int'] && contact['int'] < max_MUTUAL_FIENDS) && check_name(contact['name'])) {
         if (!window.debug) {
             contact['button'].click();
 
@@ -137,8 +141,8 @@ function pop_set_value() {
     let result = '';
     while (!check_element(result)){
         if (WHILE_SAFE > 100){
-            break;
             stop();
+            break;
         }
         APPEND_LIST.delete(result);
         let list = Array.from(APPEND_LIST);
@@ -156,7 +160,17 @@ function pop_set_value() {
 function check_position(position) {
     let result = false;
     position.forEach(function(element) {
-      if (list_content(element, PASS_POSITIONS)){
+      if (list_content(element, ACCEPT_POSITIONS)){
+          result = true;
+      }
+    });
+    return result;
+}
+
+function check_name(name) {
+    let result = false;
+    position.forEach(function(name) {
+      if (!list_content(name, EXCLUDED_NAMES)){
           result = true;
       }
     });
@@ -221,24 +235,28 @@ function stop() {
 }
 
 function stuck() {
-    clearInterval(INVITE_LOOP);
+    clearInterval(MOVE_LOOP);
     STUCKED = true;
     console.log('==================================');
     console.log('YOU STUCK');
     console.log('==================================');
 }
 
-function start() {
+function clean_workshop() {
     $('[role="presentation"]').remove();
+    $('[aria-live="polite"]').remove();
+    $('.msg-overlay-container').remove();
+}
+function start() {
+    clean_workshop();
     console.log('==================================');
     console.log('STARTING WORK');
     console.log('==================================');
     init_params();
-    approve_incoming_invite();
+    //approve_incoming_invite();
     get_statistic();
     MOVE_LOOP = window.setInterval(move, LOOP_INTERVAL+500);
     INVITE_LOOP = window.setInterval(invite_move, LOOP_INTERVAL);
-    $('[aria-live="polite"]').remove()
 }
 
 start();
