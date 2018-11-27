@@ -18,6 +18,7 @@ const min_APPEND_LIST_SIZE = 50;
 let WHILE_SAFE;
 const max_MUTUAL_FIENDS = 30;
 
+let STUCKED = false;
 let MOVE_LOOP;
 let INVITE_LOOP;
 
@@ -36,8 +37,7 @@ function move() {
 
         setTimeout(function () {
             if (LAST_CONTACT_ID === CHECK_CONTACT_ID && STUCK_COUNT === max_STUCK_COUNT) {
-                stop();
-                console.log('YOU STUCK')
+                stuck();
             } else if (LAST_CONTACT_ID === CHECK_CONTACT_ID) {
                 STUCK_COUNT += 1;
             } else {
@@ -49,12 +49,14 @@ function move() {
 }
 
 function invite_move() {
-    if (APPEND_LIST.size >= min_APPEND_LIST_SIZE){
+    if (APPEND_LIST.size >= min_APPEND_LIST_SIZE || APPEND_LIST.size > 0 && STUCKED ){
         invite(pop_set_value());
 
         if (NEW_FRIENDS && NEW_FRIENDS % 1000 === 0){
             good_message();
         }
+    } else if (APPEND_LIST.size === 0 && STUCKED){
+        stop();
     }
 }
 
@@ -215,7 +217,13 @@ function stop() {
     console.log('STOP');
     console.log('==================================');
     get_statistic(Date())
+}
 
+function stuck() {
+    clearInterval(INVITE_LOOP);
+    console.log('==================================');
+    console.log('YOU STUCK');
+    console.log('==================================');
 }
 
 function start() {
@@ -228,6 +236,7 @@ function start() {
     get_statistic();
     MOVE_LOOP = window.setInterval(move, LOOP_INTERVAL+500);
     INVITE_LOOP = window.setInterval(invite_move, LOOP_INTERVAL);
+    $('[aria-live="polite"]').remove()
 }
 
 start();

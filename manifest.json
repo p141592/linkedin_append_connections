@@ -1,0 +1,25 @@
+{
+  "manifest_version": 1,
+  "name": "Linkedin Tricks",
+  "description": "You can extend your linkedin network good enough with simple job position filter and black magic",
+  "version": "1.0.2",
+  "default_locale": "en",
+  "icons": {
+    "128": "components/icon.png"
+  },
+  "browser_action": {
+    "default_icon": "components/icon.png",
+    "default_popup": "components/html/popup.html"
+  },
+  "background": {
+    "scripts": ["components/js/background.js"]
+  },
+  "permissions": [
+    "activeTab",
+    "storage"
+  ],
+  "content_scripts": [{
+    "matches": ["://www.linkedin.com/mynetwork*"],
+    "js": ["bower_components/jquery/dist/jquery.min.js", "components/js/class.localstorage.js", "components/js/content.js"]
+  }]
+}
