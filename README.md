@@ -5,7 +5,7 @@
 
 # Statistic
 
-#### mynetwork.js
+#### new_contacts.js
 | Start time | Loop len | Parsed profile cards | New invites | Stop time | Finish reason | Context |
 | :----- | ------: |  ------: | --------: | -------: | ------: | ----- |
 | 16 Jun 2018 21:38:49 |   -    |-       | 702         | 17 Jun 2018 09:35:14 | blocked | 
