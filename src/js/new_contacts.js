@@ -160,22 +160,22 @@ function pop_set_value() {
 
 function check_position(position) {
     let result = false;
-    position.forEach(function(element) {
-      if (list_content(element, ACCEPT_POSITIONS)){
-          result = true;
-      }
-    });
+        Array.from(position).forEach(function(element) {
+          if (list_content(element, ACCEPT_POSITIONS)){
+              result = true;
+          }
+        });
     return result;
 }
 
 function check_name(name) {
     console.log(name);
     let result = false;
-    name.forEach(function(element) {
-      if (!list_content(element, EXCLUDED_NAMES)){
-          result = true;
-      }
-    });
+        Array.from(name).forEach(function(element) {
+              if (!list_content(element, EXCLUDED_NAMES)){
+                  result = true;
+              }
+        });
     return result;
 }
 
