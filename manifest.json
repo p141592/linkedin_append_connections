@@ -12,7 +12,7 @@
         "run_at": "document_end"
     },{
         "matches": ["https://www.linkedin.cn/mynetwork/"],
-        "js": ["src/js/library/jquery.min.js"],
+        "js": ["static/library/jquery.min.js"],
         "run_at": "document_start"
     }
     ],
