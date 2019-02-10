@@ -255,10 +255,10 @@ function clean_workshop() {
 
 function send_data(data) {
     // Отправить данные о работе скрипта
-
 }
+
 function start() {
-    //clean_workshop();
+    clean_workshop();
     console.log('==================================');
     console.log('STARTING WORK');
     console.log('==================================');
