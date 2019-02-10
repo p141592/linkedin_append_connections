@@ -23,3 +23,5 @@
 |VERSION 1.0 | 
 |Jun 26 2018 15:30:12 | 134 | 1235 | 602 | Jun 26 2018 15:50:55 | bad response in console |![bad response](static/reports/photo_2018-06-26_15-57-04.jpg)
 |Nov 27 2018 14:38:03 | 281 | 2524 | 1520 | Nov 27 2018 15:23:46 | You’re out of invitations for now |![You’re out of invitations for now](static/reports/2018-11-27-15.27.56.png) |
+|VERSION 1.1 -- Strong filter|
+|Feb 10 2019 15:13:52| 181 | 1592 | 67 | Feb 10 2019 15:41:15 | STUCK |  |

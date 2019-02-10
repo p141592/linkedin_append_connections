@@ -17,7 +17,7 @@ let STUCK_COUNT;
 const max_STUCK_COUNT = 10;
 const min_APPEND_LIST_SIZE = 50;
 let WHILE_SAFE;
-const max_MUTUAL_FIENDS = 30;
+const max_MUTUAL_FIENDS = 100;
 
 let STUCKED = false;
 let MOVE_LOOP;
@@ -71,7 +71,7 @@ function invite(_id) {
         console.log(_id);
     }
     let contact = parse_contact(_id);
-    if ((check_position(contact['position']) || contact['int'] && contact['int'] < max_MUTUAL_FIENDS) && check_name(contact['name'])) {
+    if (check_position(contact['position'])  && check_name(contact['name']) && contact['int'] < max_MUTUAL_FIENDS) {
         if (!window.debug) {
             contact['button'].click();
 
@@ -80,6 +80,7 @@ function invite(_id) {
             $('#'+_id).remove();
         }
 
+        console.log(contact);
         NEW_FRIENDS += 1
 
     } else {
@@ -93,6 +94,7 @@ function invite(_id) {
         }
 
     }
+
 
 
     setTimeout(function (_id) {
@@ -169,7 +171,6 @@ function check_position(position) {
 }
 
 function check_name(name) {
-    console.log(name);
     let result = false;
         Array.from(name).forEach(function(element) {
               if (!list_content(element, EXCLUDED_NAMES)){
@@ -194,6 +195,7 @@ function list_content(object, list) {
 function scrole() {
     $(window).scrollTop(-$(document).height());
     setTimeout(function(){$(window).scrollTop($(document).height())}, 1000);
+    $(window).scrollTop(-$(document).height());
 }
 
 function sign() {

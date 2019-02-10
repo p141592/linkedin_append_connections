@@ -1,25 +1,24 @@
 {
-  "manifest_version": 1,
-  "name": "Linkedin Tricks",
-  "description": "You can extend your linkedin network good enough with simple job position filter and black magic",
-  "version": "1.0.2",
-  "default_locale": "en",
-  "icons": {
-    "128": "components/icon.png"
-  },
-  "browser_action": {
-    "default_icon": "components/icon.png",
-    "default_popup": "components/html/popup.html"
-  },
-  "background": {
-    "scripts": ["components/js/background.js"]
-  },
-  "permissions": [
-    "activeTab",
-    "storage"
-  ],
-  "content_scripts": [{
-    "matches": ["://www.linkedin.com/mynetwork*"],
-    "js": ["bower_components/jquery/dist/jquery.min.js", "components/js/class.localstorage.js", "components/js/content.js"]
-  }]
+    "name": "k0d LinkedIn",
+    "description": "Expansions",
+    "version": "0.0.1",
+    "permissions": [
+        "<all_urls>"
+    ],
+    "background": {
+        "scripts": ["src/js/popup.js"],
+        "persistent": true
+    },
+    "icons": {
+        "128": "src/img/logo-128.jpg"
+    },
+    "browser_action": {
+        "default_title": "k0d.ru LN extension",
+        "default_icon": {
+            "128": "src/img/logo-128.jpg"
+        },
+        "default_popup": "src/html/popup.html"
+    },
+    "manifest_version": 2,
+    "author": "Baryshnikov Nikolay"
 }
