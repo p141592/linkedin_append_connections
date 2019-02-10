@@ -1,7 +1,7 @@
 {
     "name": "k0d LinkedIn",
-    "description": "Expansions",
-    "version": "0.0.1",
+    "description": "LinkedIn Expansions",
+    "version": "0.0.3",
     "permissions": [
         "<all_urls>",
         "activeTab"
@@ -15,7 +15,7 @@
         "matches": ["https://www.linkedin.cn/mynetwork/"],
         "all_frames": true,
         "js": ["src/js/library/jquery.min.js"],
-        "run_at": "document_start"
+        "run_at": "document_idle"
     }
     ],
     "icons": {

@@ -18,6 +18,7 @@ const max_STUCK_COUNT = 10;
 const min_APPEND_LIST_SIZE = 50;
 let WHILE_SAFE;
 const max_MUTUAL_FIENDS = 100;
+const PROFILE_NAME = $('.nav-item__profile-member-photo').attr('alt');
 
 let STUCKED = false;
 let MOVE_LOOP;
@@ -244,12 +245,17 @@ function stuck() {
     console.log('YOU STUCK');
     console.log('==================================');
     get_statistic();
-    location.reload();
+    //location.reload();
 }
 
 function clean_workshop() {
     $('[role="presentation"]').remove();
     $('[aria-live="polite"]').remove();
+}
+
+function send_data(data) {
+    // Отправить данные о работе скрипта
+
 }
 function start() {
     //clean_workshop();
