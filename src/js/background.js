@@ -56,7 +56,7 @@ function invite_move() {
     if ((APPEND_LIST.size >= min_APPEND_LIST_SIZE) || (APPEND_LIST.size > 0 && STUCKED)){
         invite(pop_set_value());
 
-        if (NEW_FRIENDS && NEW_FRIENDS % 1000 === 0){
+        if (NEW_FRIENDS && NEW_FRIENDS % 10 === 0 || PARSED && PARSED % 100 === 0){
             good_message();
         }
     } else if (APPEND_LIST.size === 0 && STUCKED){
@@ -195,7 +195,6 @@ function list_content(object, list) {
 function scrole() {
     $(window).scrollTop(-$(document).height());
     setTimeout(function(){$(window).scrollTop($(document).height())}, 1000);
-    $(window).scrollTop(-$(document).height());
 }
 
 function sign() {
@@ -244,6 +243,8 @@ function stuck() {
     console.log('==================================');
     console.log('YOU STUCK');
     console.log('==================================');
+    get_statistic();
+    location.reload();
 }
 
 function clean_workshop() {
@@ -251,7 +252,7 @@ function clean_workshop() {
     $('[aria-live="polite"]').remove();
 }
 function start() {
-    clean_workshop();
+    //clean_workshop();
     console.log('==================================');
     console.log('STARTING WORK');
     console.log('==================================');
@@ -261,3 +262,4 @@ function start() {
     MOVE_LOOP = window.setInterval(move, LOOP_INTERVAL+500);
     INVITE_LOOP = window.setInterval(invite_move, LOOP_INTERVAL);
 }
+start();

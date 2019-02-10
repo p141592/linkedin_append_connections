@@ -3,12 +3,21 @@
     "description": "Expansions",
     "version": "0.0.1",
     "permissions": [
-        "<all_urls>"
+        "<all_urls>",
+        "activeTab"
     ],
-    "background": {
-        "scripts": ["src/js/popup.js"],
-        "persistent": true
-    },
+    "content_scripts": [{
+        "matches": ["https://www.linkedin.cn/mynetwork/"],
+        "all_frames": true,
+        "js": ["src/js/background.js"],
+        "run_at": "document_end"
+    },{
+        "matches": ["https://www.linkedin.cn/mynetwork/"],
+        "all_frames": true,
+        "js": ["src/js/library/jquery.min.js"],
+        "run_at": "document_start"
+    }
+    ],
     "icons": {
         "128": "src/img/logo-128.jpg"
     },
