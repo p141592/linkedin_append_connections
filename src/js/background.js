@@ -5,7 +5,7 @@ let CONTACTS = $('.mn-pymk-list__card');
 let APPEND_LIST = new Set();
 const ACCEPT_POSITIONS = [
     'recruitment', 'recruiter', 'hr', 'recruiting', 'talents', 'talent', 'hunter', 'hiring', 'персонала', 'looking', 'vacancy',
-    'human', 'job', 'research'
+    'human', 'job'
 ];
 const LOOP_INTERVAL = 1000;
 let LOOP_LEN = 0;
