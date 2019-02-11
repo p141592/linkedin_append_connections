@@ -266,25 +266,25 @@ function register_start(data) {
     // Зарегистрировать запуск
     // Количество людей в сети
     // Группы и компании
-    $.ajax({
-      type: "POST",
-      url: url,
-      data: data,
-      dataType: 'json'
-    });
+    // $.ajax({
+    //   type: "POST",
+    //   url: url,
+    //   data: data,
+    //   dataType: 'json'
+    // });
 }
 
 function send_contact(data, invite=false) {
     // Отправить данные о новом контакте
     // Все данные о контакте по ключу профиля
-    data['invite'] = invite;
-    data['profile'] = name_md5(PROFILE_NAME);
-    $.ajax({
-      type: "POST",
-      url: url,
-      data: data,
-      dataType: 'json'
-    });
+    // data['invite'] = invite;
+    // data['profile'] = name_md5(PROFILE_NAME);
+    // $.ajax({
+    //   type: "POST",
+    //   url: url,
+    //   data: data,
+    //   dataType: 'json'
+    // });
 }
 
 function start() {
