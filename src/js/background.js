@@ -81,7 +81,6 @@ function invite(_id) {
             $('#'+_id).remove();
         }
 
-        console.log(contact);
         send_contact(contact, true);
         NEW_FRIENDS += 1
 
@@ -266,34 +265,33 @@ function register_start(data) {
     // Зарегистрировать запуск
     // Количество людей в сети
     // Группы и компании
-    // $.ajax({
-    //   type: "POST",
-    //   url: url,
-    //   data: data,
-    //   dataType: 'json'
-    // });
+    console.log(data);
+    $.ajax({
+      type: "POST",
+      url: 'https://linkedin.k0d.ru/v1/core/network/',
+      data: data,
+      dataType: 'json'
+    });
 }
 
 function send_contact(data, invite=false) {
     // Отправить данные о новом контакте
     // Все данные о контакте по ключу профиля
-    // data['invite'] = invite;
-    // data['profile'] = name_md5(PROFILE_NAME);
-    // $.ajax({
-    //   type: "POST",
-    //   url: url,
-    //   data: data,
-    //   dataType: 'json'
-    // });
+    data['invite'] = invite;
+    console.log(data);
+    $.ajax({
+      type: "POST",
+      url: 'https://linkedin.k0d.ru/v1/core/contact/',
+      data: data,
+      dataType: 'json'
+    });
 }
 
 function start() {
     register_start({
-        'name': PROFILE_NAME,
-        'id': name_md5(PROFILE_NAME),
         'network': get_int($($($($('.mn-community-summary__section').children()[0]).children()[0]).children()[1]).text().replace(',', ''))
     });
-    clean_workshop();
+    //clean_workshop();
     console.log('==================================');
     console.log('STARTING WORK');
     console.log('==================================');
