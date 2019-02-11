@@ -57,7 +57,7 @@ function invite_move() {
     if ((APPEND_LIST.size >= min_APPEND_LIST_SIZE) || (APPEND_LIST.size > 0 && STUCKED)){
         invite(pop_set_value());
 
-        if (NEW_FRIENDS && NEW_FRIENDS % 10 === 0 || PARSED && PARSED % 100 === 0){
+        if (PARSED && PARSED % 120 === 0){
             good_message();
         }
     } else if (APPEND_LIST.size === 0 && STUCKED){
@@ -210,11 +210,11 @@ function sign() {
 }
 
 function good_message(){
-    console.log('==================================');
-    console.log('YOU HAVE ONE MORE THOUSAND INVITES');
-    console.log('==================================');
+    //console.log('==================================');
+    //console.log('YOU HAVE ONE MORE THOUSAND INVITES');
+    //console.log('==================================');
     get_statistic();
-    sign()
+    //sign()
 }
 
 function get_statistic(stop_date='') {
@@ -223,7 +223,7 @@ function get_statistic(stop_date='') {
     console.log('PARSED: ' + PARSED);
     console.log('START DATE: ' + START_DATE);
     console.log('STOP DATE: ' + stop_date);
-    sign()
+    //sign()
 }
 
 function init_params() {
