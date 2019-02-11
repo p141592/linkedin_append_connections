@@ -245,7 +245,7 @@ function stuck() {
     console.log('YOU STUCK');
     console.log('==================================');
     get_statistic();
-    //location.reload();
+    location.reload();
 }
 
 function clean_workshop() {
