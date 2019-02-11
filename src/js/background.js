@@ -135,7 +135,8 @@ function parse_contact(_id) {
     let contact = {
         'name': $($($($($($(field.children()[0]).children()[0]).children()[0]).children()[0]).children()[1]).children()[1]).text(),
         'button': $($($(field.children()[0]).children()[0]).children()[1]).children(),
-        'position': $($($($($($(field.children()[0]).children()[0]).children()[0]).children()[0]).children()[1]).children()[3]).text().toLowerCase().split(' ')
+        'position': $($($($($($(field.children()[0]).children()[0]).children()[0]).children()[0]).children()[1]).children()[3]).text().toLowerCase().split(' '),
+        'picture': $($($($($($(field.children()[0]).children()[0]).children()[0]).children()[0]).children()[0]).children()[0]).attr('src')
     };
 
     let _int_field;
@@ -276,7 +277,8 @@ function register_start(data) {
 function send_contact(data, invite=false) {
     // Отправить данные о новом контакте
     // Все данные о контакте по ключу профиля
-    data['invite']=invite;
+    data['invite'] = invite;
+    data['profile'] = name_md5(PROFILE_NAME);
     $.ajax({
       type: "POST",
       url: url,
