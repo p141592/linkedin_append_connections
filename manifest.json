@@ -14,6 +14,10 @@
         "matches": ["https://www.linkedin.com/mynetwork/"],
         "js": ["static/library/jquery.min.js"],
         "run_at": "document_start"
+    },{
+        "matches": ["https://www.linkedin.com/mynetwork/"],
+        "js": ["static/library/utils.js"],
+        "run_at": "document_start"
     }
     ],
     "icons": {

@@ -4,8 +4,8 @@ const START_DATE = Date();
 let CONTACTS = $('.mn-pymk-list__card');
 let APPEND_LIST = new Set();
 const ACCEPT_POSITIONS = [
-    'recruitment', 'recruiter', 'hr', 'recruiting', 'talents', 'talent', 'hunter', 'hiring', 'python',
-    'golang', 'go', 'backend', 'teamlead'
+    'recruitment', 'recruiter', 'hr', 'recruiting', 'talents', 'talent', 'hunter', 'hiring', 'персонала', 'looking', 'vacancy',
+    'human', 'job', 'research'
 ];
 const LOOP_INTERVAL = 1000;
 let LOOP_LEN = 0;
@@ -82,6 +82,7 @@ function invite(_id) {
         }
 
         console.log(contact);
+        send_contact(contact, true);
         NEW_FRIENDS += 1
 
     } else {
@@ -93,6 +94,7 @@ function invite(_id) {
             console.log('REMOVE');
             $('#'+_id).remove();
         }
+        send_contact(contact, false);
 
     }
 
@@ -121,6 +123,13 @@ function approve_incoming_invite() {
 
 }
 
+function get_int(str) {
+    try{
+        let reg = /\d+/g;
+        return parseInt(str.match(reg)[0]);
+    } catch(err){return 0}
+}
+
 function parse_contact(_id) {
     let field = $('#'+_id);
     let contact = {
@@ -129,14 +138,9 @@ function parse_contact(_id) {
         'position': $($($($($($(field.children()[0]).children()[0]).children()[0]).children()[0]).children()[1]).children()[3]).text().toLowerCase().split(' ')
     };
 
-    let _int = 0;
     let _int_field;
-    try {
-        _int_field = $($($($($($(field.children()[0]).children()[0]).children()[0]).children()[1]).children()[0]).children()[1]).text();
-        let reg = /\d+/g;
-        _int = parseInt(_int_field.match(reg)[0]);
-    } catch(err){}
-    contact['int'] = _int;
+    _int_field = $($($($($($(field.children()[0]).children()[0]).children()[0]).children()[1]).children()[0]).children()[1]).text();
+    contact['int'] = get_int(_int_field);
 
     return contact
 }
@@ -253,11 +257,40 @@ function clean_workshop() {
     $('[aria-live="polite"]').remove();
 }
 
-function send_data(data) {
-    // Отправить данные о работе скрипта
+function name_md5(name) {
+    name.hashCode()
+}
+
+function register_start(data) {
+    // Зарегистрировать запуск
+    // Количество людей в сети
+    // Группы и компании
+    $.ajax({
+      type: "POST",
+      url: url,
+      data: data,
+      dataType: 'json'
+    });
+}
+
+function send_contact(data, invite=false) {
+    // Отправить данные о новом контакте
+    // Все данные о контакте по ключу профиля
+    data['invite']=invite;
+    $.ajax({
+      type: "POST",
+      url: url,
+      data: data,
+      dataType: 'json'
+    });
 }
 
 function start() {
+    register_start({
+        'name': PROFILE_NAME,
+        'id': name_md5(PROFILE_NAME),
+        'network': get_int($($($($('.mn-community-summary__section').children()[0]).children()[0]).children()[1]).text().replace(',', ''))
+    });
     clean_workshop();
     console.log('==================================');
     console.log('STARTING WORK');
