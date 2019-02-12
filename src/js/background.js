@@ -108,6 +108,7 @@ function invite(_id) {
         }
         if (!check_stop_service_window()){
             SCHEDULE = SCHEDULE_PAUSE;
+	    schedule_message();
         }
     }, LOOP_INTERVAL);
     $('.msg-overlay-container').remove();
@@ -213,6 +214,11 @@ function sign() {
     console.log('==================================');
 }
 
+function schedule_message(){
+console.log('==================================');
+	console.log('SCHEDULE PAUSE:'+SCHEDULE);
+	console.log('==================================');
+}
 function good_message(){
     //console.log('==================================');
     //console.log('YOU HAVE ONE MORE THOUSAND INVITES');
