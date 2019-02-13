@@ -106,7 +106,7 @@ function invite(_id) {
             stop();
             console.log('YOU ARE BLOCKING')
         }
-        if (!check_stop_service_window()){
+        if (check_stop_service_window()){
             SCHEDULE = SCHEDULE_PAUSE;
 	    schedule_message();
         }
