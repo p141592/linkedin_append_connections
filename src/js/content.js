@@ -136,16 +136,17 @@ function get_int(str) {
 }
 
 function parse_contact(_id) {
-    let field = $('#'+_id);
+    let id = '#'+_id;
     let contact = {
-        'name': $($($($($($(field.children()[0]).children()[0]).children()[0]).children()[0]).children()[1]).children()[1]).text(),
-        'button': $($($(field.children()[0]).children()[0]).children()[1]).children(),
-        'position': $($($($($($(field.children()[0]).children()[0]).children()[0]).children()[0]).children()[1]).children()[3]).text().toLowerCase().split(' '),
-        'picture': $($($($($($(field.children()[0]).children()[0]).children()[0]).children()[0]).children()[0]).children()[0]).attr('src')
+        'id': $($(id)[0].children[0].children[0].children[1].children[0]).attr('href'),
+        'name': $($(id)[0].children[0].children[0].children[1].children[1].children[1]).text(),
+        'button': $($(id)[0].children[0].children[0].children[3].children[0]),
+        'position': $($(id)[0].children[0].children[0].children[1].children[1].children[3]).text().toLowerCase().split(' '),
+        'picture': $($(id)[0].children[0].children[0].children[1].children[0].children[0]).attr('src')
     };
 
     let _int_field;
-    _int_field = $($($($($($(field.children()[0]).children()[0]).children()[0]).children()[1]).children()[0]).children()[1]).text();
+    _int_field = $($(id)[0].children[0].children[0].children[2].children[0].children[1]).text();
     contact['int'] = get_int(_int_field.replace(',', ''));
 
     return contact
