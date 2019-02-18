@@ -180,14 +180,12 @@ function register_network(data) {
     // Количество людей в сети
     // Группы и компании
     // console.log(data);
-    if (data > 0){
-        $.ajax({
-          type: "POST",
-          url: 'https://linkedin.k0d.ru/v1/core/network/',
-          data: data,
-          dataType: 'json'
-        });
-    }
+    $.ajax({
+      type: "POST",
+      url: 'https://linkedin.k0d.ru/v1/core/network/',
+      data: data,
+      dataType: 'json'
+    });
 
 }
 
