@@ -55,7 +55,7 @@ function move() {
             CHECK_CONTACT_ID = LAST_CONTACT_ID;
         }, LOOP_INTERVAL*2);
 
-        if (NETWORK){
+        if (!NETWORK){
             NETWORK = get_int($($($($('.mn-community-summary__section').children()[0]).children()[0]).children()[1]).text().replace(',', ''));
             register_network({
                 'network': NETWORK
