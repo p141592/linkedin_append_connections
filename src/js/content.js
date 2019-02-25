@@ -68,9 +68,6 @@ function invite_move() {
     if ((APPEND_LIST.size >= min_APPEND_LIST_SIZE) || (APPEND_LIST.size > 0 && STUCKED)){
         invite(pop_set_value());
 
-        if (PARSED && PARSED % 120 === 0){
-            good_message();
-        }
     } else if (APPEND_LIST.size === 0 && STUCKED){
         stuck();
     }
@@ -80,31 +77,15 @@ function invite_move() {
 
 
 function invite(_id) {
-    if (window.debug) {
-        console.log(_id);
-    }
     let contact = parse_contact(_id);
     if (check_position(contact['position'])  && check_name(contact['name']) && check_user_picture(contact['picture']) && contact['mutual_contacts'] < max_MUTUAL_FIENDS) {
-        if (!window.debug) {
-            contact['button'].click();
-
-        } else {
-            console.log('INVITE');
-            $('#'+_id).remove();
-        }
+        contact['button'].click();
 
         send_contact(contact, true);
         NEW_FRIENDS += 1
 
     } else {
-        if (!window.debug){
-            //contact['close'].click();
-            $('#'+_id).remove();
-
-        } else {
-            console.log('REMOVE');
-            $('#'+_id).remove();
-        }
+        $('#'+_id).remove();
         send_contact(contact, false);
 
     }
@@ -128,13 +109,18 @@ function invite(_id) {
 function parse_contact(_id) {
     let id = '#'+_id;
     let contact = {
-        'id': $($(id)[0].children[0].children[0].children[1].children[0]).attr('href'),
-        'name': $($(id)[0].children[0].children[0].children[1].children[1].children[1]).text(),
+        'id': $($(id)[0].children[0].children[0].children[1].children[1]).attr('href'),
+        'name': $($(id)[0].children[0].children[0].children[1].children[2].children[1].children[0]).text(),
         'button': $($(id)[0].children[0].children[0].children[3].children[0]),
-        'position': $($(id)[0].children[0].children[0].children[1].children[1].children[3]).text().toLowerCase().split(' '),
-        'picture': $($(id)[0].children[0].children[0].children[1].children[0].children[0]).attr('src')
+        'position': $($(id)[0].children[0].children[0].children[1].children[2].children[3]).text().toLowerCase().split(' '),
+        'picture': $($(id)[0].children[0].children[0].children[1].children[1].children[0]).attr('src')
     };
-
+    let _contact_name = $($(id)[0].children[0].children[0].children[1].children[2].children[1].children[0]).text();
+    if (Boolean(_contact_name)){
+        contact['name'] = $($(id)[0].children[0].children[0].children[1].children[2].children[1].children[0]).text();
+    } else {
+        contact['name'] = $($(id)[0].children[0].children[0].children[1].children[2].children[1]).text();
+    }
     let _int_field;
     _int_field = $($(id)[0].children[0].children[0].children[2].children[0].children[1]).text();
     contact['mutual_contacts'] = get_int(_int_field.replace(',', ''));
@@ -163,11 +149,7 @@ function check_name(name) {
 }
 
 function check_user_picture(url) {
-    if (url === passed_PICTURE){
-        return false;
-    } else {
-        return true;
-    }
+    return url === passed_PICTURE;
 }
 
 function scrole() {
@@ -215,13 +197,6 @@ function schedule_message(){
 console.log('==================================');
 	console.log('SCHEDULE PAUSE:'+SCHEDULE);
 	console.log('==================================');
-}
-function good_message(){
-    //console.log('==================================');
-    //console.log('YOU HAVE ONE MORE THOUSAND INVITES');
-    //console.log('==================================');
-    get_statistic();
-    //sign()
 }
 
 function get_statistic(stop_date='') {
