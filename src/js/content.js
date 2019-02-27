@@ -30,6 +30,7 @@ let EXCLUDED_NAMES = ['shijoy', 'santhya', 'sourav', 'sharath', 'sathya', 'subha
 let EXCLUDED_SYMBOLS = [];
 
 let NETWORK = false;
+let reload_LOOP_LEN = 1000;
 
 function move() {
     if (APPEND_LIST.size <= min_APPEND_LIST_SIZE) {
@@ -60,6 +61,9 @@ function move() {
             register_network({
                 'network': NETWORK
             });
+        }
+        if (LOOP_LEN===reload_LOOP_LEN){
+            location.reload();
         }
     }
 }
