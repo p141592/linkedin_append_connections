@@ -78,7 +78,7 @@ function invite_move() {
 
 function invite(_id) {
     let contact = parse_contact(_id);
-    if (check_position(contact['position'])  && check_name(contact['name']) && check_user_picture(contact['picture']) && contact['mutual_contacts'] < max_MUTUAL_FIENDS) {
+    if (check_position(contact['position'])  && check_name(contact['name']) && contact['mutual_contacts'] < max_MUTUAL_FIENDS) {
         contact['button'].click();
 
         send_contact(contact, true);
